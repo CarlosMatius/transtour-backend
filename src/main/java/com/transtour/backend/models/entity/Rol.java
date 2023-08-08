@@ -17,9 +17,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "roles")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Rol implements Serializable{
 
 	@Id

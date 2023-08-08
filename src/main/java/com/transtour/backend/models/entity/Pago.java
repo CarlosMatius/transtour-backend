@@ -22,9 +22,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "pagos")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Pago implements Serializable{
 	
 	@Id
@@ -43,7 +41,7 @@ public class Pago implements Serializable{
 	private LocalDateTime createdAt;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "reservacion")
+	@JoinColumn(name = "reserva")
 	private Reserva reserva;
 	
 	public Pago(PagoBuilder builder) {

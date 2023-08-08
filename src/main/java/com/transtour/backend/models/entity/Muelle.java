@@ -17,9 +17,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "muelles")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Muelle implements Serializable{
 
 	@Id

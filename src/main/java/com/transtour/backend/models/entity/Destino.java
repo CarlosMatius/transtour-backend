@@ -17,9 +17,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "destinos")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Destino implements Serializable{
 
 	@Id
@@ -29,6 +27,8 @@ public class Destino implements Serializable{
 	@Column(unique = true)
 	private String nombre;
 	
+	private boolean enabled;
+	
 	/*
 	 * Constructors
 	 */
@@ -36,6 +36,7 @@ public class Destino implements Serializable{
 	public Destino(DestinoBuilder builder) {
 		this.id = builder.getId();
 		this.nombre = builder.getNombre();
+		this.enabled = builder.isEnabled();
 	}
 	
 	private static final long serialVersionUID = 1L;

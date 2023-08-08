@@ -19,9 +19,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "embarcaciones")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Embarcacion implements Serializable{
 
 	@Id
@@ -29,6 +27,7 @@ public class Embarcacion implements Serializable{
 	private Long id;
 	private String nombre;
 	private int capacidad;
+	private boolean enabled;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa")
@@ -42,6 +41,7 @@ public class Embarcacion implements Serializable{
 		this.id = builder.getId();
 		this.nombre = builder.getNombre();
 		this.capacidad = builder.getCapacidad();
+		this.enabled = builder.isEnabled();
 		this.empresa = builder.getEmpresa();
 	}
 	

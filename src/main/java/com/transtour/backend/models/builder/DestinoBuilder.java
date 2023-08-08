@@ -9,6 +9,7 @@ public class DestinoBuilder {
 
 	private Long id;
 	private String nombre;
+	private boolean enabled;
 	
 	/*
 	 * Methods
@@ -21,6 +22,11 @@ public class DestinoBuilder {
 	
 	public DestinoBuilder nombre(String nombre) {
 		this.nombre = nombre;
+		return this;
+	}
+	
+	public DestinoBuilder enabled(boolean enabled) {
+		this.enabled = enabled;
 		return this;
 	}
 	

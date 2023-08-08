@@ -1,12 +1,12 @@
 package com.transtour.backend.models.builder;
 
-import com.transtour.backend.models.entity.Contacto;
+import com.transtour.backend.models.entity.ResponsableReserva;
 import com.transtour.backend.models.entity.Reserva;
 
 import lombok.Getter;
 
 @Getter
-public class ContactoBuilder {
+public class ResponsableReservaBuilder {
 
 	private Long id;
 	private String nombre;
@@ -15,37 +15,37 @@ public class ContactoBuilder {
 	private String telefono;
 	private Reserva reserva;
 	
-	public ContactoBuilder id(Long id) {
+	public ResponsableReservaBuilder id(Long id) {
 		this.id = id;
 		return this;
 	}
 	
-	public ContactoBuilder nombre(String nombre) {
+	public ResponsableReservaBuilder nombre(String nombre) {
 		this.nombre = nombre;
 		return this;
 	}
 	
-	public ContactoBuilder apellido(String apellido) {
+	public ResponsableReservaBuilder apellido(String apellido) {
 		this.apellido = apellido;
 		return this;
 	}
 	
-	public ContactoBuilder email(String email) {
+	public ResponsableReservaBuilder email(String email) {
 		this.email = email;
 		return this;
 	}
 	
-	public ContactoBuilder telefono(String telefono) {
+	public ResponsableReservaBuilder telefono(String telefono) {
 		this.telefono = telefono;
 		return this;
 	}
 	
-	public ContactoBuilder reserva(Reserva reserva) {
+	public ResponsableReservaBuilder reserva(Reserva reserva) {
 		this.reserva = reserva;
 		return this;
 	}
 	
-	public Contacto build() {
-		return new Contacto(this);
+	public ResponsableReserva build() {
+		return new ResponsableReserva(this);
 	}
 }

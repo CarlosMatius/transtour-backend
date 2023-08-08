@@ -16,6 +16,7 @@ public class EmpresaBuilder {
 	private String nit;
 	private String email;
 	private String telefono;
+	private String imagen;
 	private boolean enabled;
 	private List<Usuario> usuarios;
 	private List<Embarcacion> embarcaciones;
@@ -46,6 +47,11 @@ public class EmpresaBuilder {
 	
 	public EmpresaBuilder telefono(String telefono) {
 		this.telefono = telefono;
+		return this;
+	}
+	
+	public EmpresaBuilder imagen(String imagen) {
+		this.imagen = imagen;
 		return this;
 	}
 	

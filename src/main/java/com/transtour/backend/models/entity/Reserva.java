@@ -27,9 +27,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "reservas")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Reserva implements Serializable{
 
 	@Id
@@ -50,7 +48,7 @@ public class Reserva implements Serializable{
 	private Itinerario itinerario;
 	
 	@OneToOne(mappedBy = "reserva")
-	private Contacto contacto;
+	private ResponsableReserva responsableReserva;
 	
 	@OneToOne(mappedBy = "reserva")
 	private Pago pago;
@@ -68,7 +66,7 @@ public class Reserva implements Serializable{
 		this.createdAt = builder.getCreatedAt();
 		this.total = builder.getTotal();
 		this.itinerario = builder.getItinerario();
-		this.contacto = builder.getContacto();
+		this.responsableReserva = builder.getResponsableReserva();
 		this.pago = builder.getPago();
 		this.pasajeros = builder.getPasajeros();
 	}

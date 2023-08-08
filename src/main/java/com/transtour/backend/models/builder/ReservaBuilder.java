@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.transtour.backend.models.entity.Contacto;
+import com.transtour.backend.models.entity.ResponsableReserva;
 import com.transtour.backend.models.entity.Itinerario;
 import com.transtour.backend.models.entity.Pago;
 import com.transtour.backend.models.entity.Pasajero;
@@ -20,7 +20,7 @@ public class ReservaBuilder {
 	private LocalDateTime createdAt;
 	private BigDecimal total;
 	private Itinerario itinerario;
-	private Contacto contacto;
+	private ResponsableReserva responsableReserva;
 	private Pago pago;
 	private List<Pasajero> pasajeros;
 	
@@ -49,8 +49,8 @@ public class ReservaBuilder {
 		return this;
 	}
 	
-	public ReservaBuilder contacto(Contacto contacto) {
-		this.contacto = contacto;
+	public ReservaBuilder contacto(ResponsableReserva responsableReserva) {
+		this.responsableReserva = responsableReserva;
 		return this;
 	}
 	

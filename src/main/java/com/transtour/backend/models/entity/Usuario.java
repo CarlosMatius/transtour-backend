@@ -25,17 +25,17 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "usuarios")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Usuario implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
 	private String nombre;
+	
+	@Column(unique = true)
+	private String apellido;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tipo_identificacion")
@@ -69,6 +69,7 @@ public class Usuario implements Serializable{
 	public Usuario(UsuarioBuilder builder) {
 		this.id = builder.getId();
 		this.nombre = builder.getNombre();
+		this.apellido = builder.getApellido();
 		this.tipoIdentificacion = builder.getTipoIdentificacion();
 		this.identificacion = builder.getIdentificacion();
 		this.user = builder.getUser();

@@ -22,9 +22,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "empresas")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Empresa implements Serializable{
 	
 	@Id
@@ -42,6 +40,7 @@ public class Empresa implements Serializable{
 	
 	@Column(unique = true)
 	private String telefono;
+	private String imagen;
 	private boolean enabled;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -60,6 +59,7 @@ public class Empresa implements Serializable{
 		this.nit = builder.getNit();
 		this.email = builder.getEmail();
 		this.telefono = builder.getTelefono();
+		this.imagen = builder.getImagen();
 		this.enabled = builder.isEnabled();
 		this.usuarios = builder.getUsuarios();
 		this.embarcaciones = builder.getEmbarcaciones();

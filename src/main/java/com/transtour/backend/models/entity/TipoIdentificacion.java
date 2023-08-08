@@ -17,9 +17,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "tipos_identificaciones")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class TipoIdentificacion implements Serializable{
 
 	@Id

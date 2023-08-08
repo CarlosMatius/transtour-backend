@@ -23,9 +23,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "itinerarios")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Itinerario implements Serializable{
 
 	@Id

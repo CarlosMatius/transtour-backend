@@ -12,18 +12,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.transtour.backend.models.builder.ContactoBuilder;
+import com.transtour.backend.models.builder.ResponsableReservaBuilder;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "contactos")
-@NoArgsConstructor
-@Getter
-@Setter
-public class Contacto implements Serializable{
+@Table(name = "responsable_reserva")
+@NoArgsConstructor @Getter @Setter
+public class ResponsableReserva implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,10 +32,10 @@ public class Contacto implements Serializable{
 	private String telefono;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "reservacion")
+	@JoinColumn(name = "reserva")
 	private Reserva reserva;
 	
-	public Contacto(ContactoBuilder builder) {
+	public ResponsableReserva(ResponsableReservaBuilder builder) {
 		this.id = builder.getId();
 		this.nombre = builder.getNombre();
 		this.apellido = builder.getApellido();

@@ -19,9 +19,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "pasajeros")
-@NoArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor @Getter @Setter
 public class Pasajero implements Serializable{
 
 	@Id
@@ -36,7 +34,7 @@ public class Pasajero implements Serializable{
 	private String identificacion;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "reservacion")
+	@JoinColumn(name = "reserva")
 	private Reserva reserva;
 	
 	public Pasajero(PasajeroBuilder builder) {

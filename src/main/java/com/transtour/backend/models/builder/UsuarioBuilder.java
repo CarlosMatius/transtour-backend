@@ -14,6 +14,7 @@ public class UsuarioBuilder {
 
 	private Long id;
 	private String nombre;
+	private String apellido;
 	private TipoIdentificacion tipoIdentificacion;
 	private String identificacion;
 	private String user;
@@ -33,6 +34,11 @@ public class UsuarioBuilder {
 	
 	public UsuarioBuilder nombre(String nombre) {
 		this.nombre = nombre;
+		return this;
+	}
+	
+	public UsuarioBuilder apellido(String apellido) {
+		this.apellido = apellido;
 		return this;
 	}
 	
