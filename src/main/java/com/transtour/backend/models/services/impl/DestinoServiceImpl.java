@@ -23,6 +23,20 @@ public class DestinoServiceImpl implements IDestinoService{
 	private ModelMapper modelMapper;
 
 	@Override
+	@Transactional
+	public DestinoDto save(DestinoDto destinoDto) {
+		Destino destino = modelMapper.map(destinoDto, Destino.class);
+		destino = destinoDao.save(destino);
+		return modelMapper.map(destino, DestinoDto.class);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public DestinoDto findById(Long id) {
+		return modelMapper.map(destinoDao.findById(id).orElse(null), DestinoDto.class);
+	}
+	
+	@Override
 	@Transactional(readOnly = true)
 	public List<DestinoDto> findAll() {
 		List<DestinoDto> dtoList = new ArrayList<>();
@@ -32,5 +46,11 @@ public class DestinoServiceImpl implements IDestinoService{
 			dtoList.add(destinoDto);	
 		}
 		return dtoList;
+	}
+	
+	@Override
+	@Transactional
+	public void delete(Long id) {
+		destinoDao.deleteById(id);
 	}
 }

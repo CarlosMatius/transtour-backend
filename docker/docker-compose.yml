@@ -1,20 +1,15 @@
-version: '3.8'
-
+version: '3.9'
 services:
   postgresql:
     container_name: postgres
     image: postgres:15.3
     restart: always
-    volumes:
-      - transtour-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=transtour-user
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=transtour-db
-      - PGDATA=/data/postgres
+      POSTGRES_USER: transtour-user
+      POSTGRES_PASSWORD: transtour.2023*
+      POSTGRES_DB: transtour-db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgresql_data/transtour:/var/lib/postgresql/data
     ports:
       - 5432:5432
-
-volumes:
-  transtour-data:
-    external: true
