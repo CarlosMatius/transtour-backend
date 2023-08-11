@@ -2,15 +2,20 @@ package com.transtour.backend.models.services;
 
 import java.util.List;
 
-import com.transtour.backend.models.dto.ItinerarioDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.transtour.backend.models.dto.ItinerarioDTO;
 
 public interface IItinerarioService {
 
-	public ItinerarioDto save(ItinerarioDto itinerarioDto);
+	public ItinerarioDTO save(ItinerarioDTO itinerarioDto);
 	
-	public ItinerarioDto findById(Long id);
+	public ItinerarioDTO findById(Long id);
 	
-	public List<ItinerarioDto> findAll();
+	public List<ItinerarioDTO> findAll();
+	
+	public Page<ItinerarioDTO> findAll(Pageable page);
 	
 	public void delete(Long id);
 }

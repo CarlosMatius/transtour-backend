@@ -2,17 +2,23 @@ package com.transtour.backend.models.services;
 
 import java.util.List;
 
-import com.transtour.backend.models.dto.UsuarioDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.transtour.backend.models.dto.UsuarioDTO;
+import com.transtour.backend.models.dto.UsuarioResponse;
 
 public interface IUsuarioService {
 	
-	public UsuarioDto save(UsuarioDto usuarioDto);
+	public UsuarioDTO save(UsuarioDTO usuarioDto);
 	
-	public UsuarioDto findById(Long id);
+	public UsuarioDTO findById(Long id);
 	
-	public UsuarioDto findByIdentificacion(String identificacion);
+	public UsuarioResponse findByIdentificacion(String identificacion);
 	
-	public List<UsuarioDto> findAll();
+	public List<UsuarioResponse> findAll();
+	
+	public Page<UsuarioResponse> findAll(Pageable page);
 	
 	public void delete(Long id);
 }

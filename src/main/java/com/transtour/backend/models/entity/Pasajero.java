@@ -2,6 +2,7 @@ package com.transtour.backend.models.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,16 +26,22 @@ public class Pasajero implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(nullable = false, length = 30)
 	private String nombre;
+	
+	@Column(nullable = false, length = 30)
 	private String apellido;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tipo_identificacion")
+	@JoinColumn(name = "tipo_identificacion", nullable = false)
 	private TipoIdentificacion tipoIdentificacion;
+	
+	@Column(nullable = false, length = 15)
 	private String identificacion;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "reserva")
+	@JoinColumn(name = "reserva", nullable = false)
 	private Reserva reserva;
 	
 	public Pasajero(PasajeroBuilder builder) {

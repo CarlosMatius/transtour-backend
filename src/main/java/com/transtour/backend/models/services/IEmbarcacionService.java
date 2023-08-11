@@ -2,15 +2,20 @@ package com.transtour.backend.models.services;
 
 import java.util.List;
 
-import com.transtour.backend.models.dto.EmbarcacionDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.transtour.backend.models.dto.EmbarcacionDTO;
 
 public interface IEmbarcacionService {
 
-	public EmbarcacionDto save(EmbarcacionDto embarcacionDto);
+	public EmbarcacionDTO save(EmbarcacionDTO embarcacionDto);
 	
-	public EmbarcacionDto findById(Long id);
+	public EmbarcacionDTO findById(Long id);
 	
-	public List<EmbarcacionDto> findAll();
+	public List<EmbarcacionDTO> findAll();
+	
+	public Page<EmbarcacionDTO> findAll(Pageable page);
 	
 	public void delete(Long id);
 }

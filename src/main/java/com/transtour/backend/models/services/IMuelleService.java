@@ -2,15 +2,15 @@ package com.transtour.backend.models.services;
 
 import java.util.List;
 
-import com.transtour.backend.models.dto.MuelleDto;
+import com.transtour.backend.models.dto.MuelleDTO;
 
 public interface IMuelleService {
 
-	public MuelleDto save(MuelleDto muelleDto);
+	public MuelleDTO save(MuelleDTO muelleDto);
 	
-	public MuelleDto findById(Long id);
+	public MuelleDTO findById(Long id);
 	
-	public List<MuelleDto> findAll();
+	public List<MuelleDTO> findAll();
 	
 	public void delete(Long id);
 }

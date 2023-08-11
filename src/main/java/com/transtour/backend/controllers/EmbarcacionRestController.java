@@ -1,9 +1,20 @@
 package com.transtour.backend.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,46 +23,120 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.EmbarcacionDto;
+import com.transtour.backend.models.dto.EmbarcacionDTO;
 import com.transtour.backend.models.services.IEmbarcacionService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/v1")
 public class EmbarcacionRestController {
 
+	private static final String MESSAGE = "message";
+	private static final String ERROR = "error";
+	
 	@Autowired
 	private IEmbarcacionService embarcacionService;
 
 	@GetMapping("/embarcaciones")
-	public List<EmbarcacionDto> index() {
+	public List<EmbarcacionDTO> index() {
 		return embarcacionService.findAll();
 	}
 	
+	@GetMapping("/embarcaciones/page/{page}")
+	public Page<EmbarcacionDTO> index(@PathVariable Integer page) {
+		Pageable pageable = PageRequest.of(page, 3);
+		return embarcacionService.findAll(pageable);
+	}
+	
 	@PostMapping("/embarcaciones")
-	@ResponseStatus(HttpStatus.CREATED)
-	public EmbarcacionDto create(@RequestBody EmbarcacionDto embarcacionDto) {
-		return embarcacionService.save(embarcacionDto);
+	public ResponseEntity<Object> create(@Valid @RequestBody EmbarcacionDTO embarcacionDTO, BindingResult result) {
+		
+		EmbarcacionDTO embarcacionNew;
+		Map<String, Object> response = new HashMap<>();
+		
+		if(result.hasErrors()) {
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map(err -> "El campo '" + err.getField() + "' "+ err.getDefaultMessage())
+					.collect(Collectors.toList());
+			
+			response.put(ERROR, errors);			
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+		
+		try {
+			
+			embarcacionNew = embarcacionService.save(embarcacionDTO);
+			
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo registrar la embarcacion en la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put(MESSAGE, "la embarcacion ha sido registrada exitosamente!");
+		response.put("embarcacion", embarcacionNew);
+		
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/embarcaciones/{id}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public EmbarcacionDto update(@RequestBody EmbarcacionDto embarcacionDto, @PathVariable Long id) {
-		EmbarcacionDto embarcacionActual = embarcacionService.findById(id);
+	public ResponseEntity<Object> update(@Valid @RequestBody EmbarcacionDTO embarcacionDto, BindingResult result, @PathVariable Long id) {
+		EmbarcacionDTO embarcacionActual = embarcacionService.findById(id);
+		EmbarcacionDTO embarcacionActualizada;
 		
-		embarcacionActual.setNombre(embarcacionDto.getNombre());
-		embarcacionActual.setCapacidad(embarcacionDto.getCapacidad());
-		embarcacionActual.setEnabled(embarcacionDto.isEnabled());
+		Map<String, Object> response = new HashMap<>();
+
+		if(result.hasErrors()) {
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map(err -> "El campo '" + err.getField() + "' "+ err.getDefaultMessage())
+					.collect(Collectors.toList());
+			
+			response.put(ERROR, errors);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 		
-		return embarcacionService.save(embarcacionActual);
+		if(embarcacionActual == null) {
+			response.put(MESSAGE, "Error: la embarcacion con ID: " + id + " No existe en el sistema");
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+		
+		try {
+			embarcacionActual.setNombre(embarcacionDto.getNombre());
+			embarcacionActual.setCapacidad(embarcacionDto.getCapacidad());
+			embarcacionActual.setEnabled(embarcacionDto.isEnabled());
+			
+			embarcacionActualizada = embarcacionService.save(embarcacionActual);
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo actualizar la embarcacion en la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put(MESSAGE, "La embarcacion ha sido actualizada exitosamente!");
+		response.put("destino", embarcacionActualizada);
+		
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/embarcaciones/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) {
-		embarcacionService.delete(id);
+	public ResponseEntity<Object> delete(@PathVariable Long id) {
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			embarcacionService.delete(id);
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo eliminar la embarcacion en la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put(MESSAGE, "la embarcacion ha sido eliminada exitosamente!");
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

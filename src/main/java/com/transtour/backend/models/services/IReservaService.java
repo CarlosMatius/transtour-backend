@@ -2,17 +2,22 @@ package com.transtour.backend.models.services;
 
 import java.util.List;
 
-import com.transtour.backend.models.dto.ReservaDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.transtour.backend.models.dto.ReservaDTO;
 
 public interface IReservaService {
 
-	public ReservaDto save(ReservaDto reservaDto);
+	public ReservaDTO save(ReservaDTO reservaDto);
 	
-	public ReservaDto findById(Long id);
+	public ReservaDTO findById(Long id);
 	
-	public ReservaDto findByCodigoReserva(String codigoReserva);
+	public ReservaDTO findByCodigoReserva(String codigoReserva);
 	
-	public List<ReservaDto> findAll();
+	public List<ReservaDTO> findAll();
+	
+	public Page<ReservaDTO> findAll(Pageable page);
 	
 	public void delete(Long id);
 }

@@ -2,17 +2,22 @@ package com.transtour.backend.models.services;
 
 import java.util.List;
 
-import com.transtour.backend.models.dto.EmpresaDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.transtour.backend.models.dto.EmpresaDTO;
 
 public interface IEmpresaService {
 
-	public EmpresaDto save(EmpresaDto empresaDto);
+	public EmpresaDTO save(EmpresaDTO empresaDto);
 	
-	public EmpresaDto findById(Long id);
+	public EmpresaDTO findById(Long id);
 	
-	public EmpresaDto findByNit(String nit);
+	public EmpresaDTO findByNit(String nit);
 	
-	public List<EmpresaDto> findAll();
+	public List<EmpresaDTO> findAll();
+	
+	public Page<EmpresaDTO> findAll(Pageable page);
 	
 	public void delete(Long id);
 }

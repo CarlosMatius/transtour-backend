@@ -1,9 +1,20 @@
 package com.transtour.backend.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,51 +23,124 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.ItinerarioDto;
+import com.transtour.backend.models.dto.ItinerarioDTO;
 import com.transtour.backend.models.services.IItinerarioService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/v1")
 public class ItinerarioRestController {
+	
+	private static final String MESSAGE = "message";
+	private static final String ERROR = "error";
 
 	@Autowired
 	private IItinerarioService itinerarioService;
 
 	@GetMapping("/itinerarios")
-	public List<ItinerarioDto> index() {
+	public List<ItinerarioDTO> index() {
 		return itinerarioService.findAll();
 	}
 	
-	
-	@PostMapping("/itinerarios")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ItinerarioDto create(@RequestBody ItinerarioDto itinerarioDto) {
-		return itinerarioService.save(itinerarioDto);
+	@GetMapping("/itinerarios/page/{page}")
+	public Page<ItinerarioDTO> index(@PathVariable Integer page) {
+		Pageable pageable = PageRequest.of(page, 3);
+		return itinerarioService.findAll(pageable);
 	}
 	
+	@PostMapping("/itinerarios")
+	public ResponseEntity<Object> create(@Valid @RequestBody ItinerarioDTO itinerarioDTO, BindingResult result) {
+		
+		ItinerarioDTO itinerarioNew;
+		Map<String, Object> response = new HashMap<>();
+		
+		if(result.hasErrors()) {
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map(err -> "El campo '" + err.getField() + "' "+ err.getDefaultMessage())
+					.collect(Collectors.toList());
+			
+			response.put(ERROR, errors);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
+		
+		try {
+			
+			itinerarioNew = itinerarioService.save(itinerarioDTO);
+			
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo registrar el itinerario en la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put(MESSAGE, "El itinerario ha sido registrado exitosamente!");
+		response.put("itinerario", itinerarioNew);
+		
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+
 	@PutMapping("/itinerarios/{id}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ItinerarioDto update(@RequestBody ItinerarioDto itinerarioDto, @PathVariable Long id) {
-		ItinerarioDto itinerarioActual = itinerarioService.findById(id);
+	public ResponseEntity<Object> update(@Valid @RequestBody ItinerarioDTO itinerarioDTO, BindingResult result, @PathVariable Long id) {
+		ItinerarioDTO itinerarioActual = itinerarioService.findById(id);
+		ItinerarioDTO itinerarioActualizado;
 		
-		itinerarioActual.setFechaEmbarque(itinerarioDto.getFechaEmbarque());
-		itinerarioActual.setHoraSalidad(itinerarioDto.getHoraSalidad());
-		itinerarioActual.setHoraRegreso(itinerarioDto.getHoraRegreso());
-		itinerarioActual.setPrecio(itinerarioDto.getPrecio());
-		itinerarioActual.setEmbarcacion(itinerarioDto.getEmbarcacion());
-		itinerarioActual.setDestino(itinerarioDto.getDestino());
-		itinerarioActual.setMuelle(itinerarioDto.getMuelle());
+		Map<String, Object> response = new HashMap<>();
+
+		if(result.hasErrors()) {
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map(err -> "El campo '" + err.getField() + "' "+ err.getDefaultMessage())
+					.collect(Collectors.toList());
+			
+			response.put(ERROR, errors);
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 		
-		return itinerarioService.save(itinerarioActual);
+		if(itinerarioActual == null) {
+			response.put(MESSAGE, "Error: el itinerario con ID: " + id + " No existe en el sistema");
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+		
+		try {
+			itinerarioActual.setFechaEmbarque(itinerarioDTO.getFechaEmbarque());
+			itinerarioActual.setHoraSalidad(itinerarioDTO.getHoraSalidad());
+			itinerarioActual.setHoraRegreso(itinerarioDTO.getHoraRegreso());
+			itinerarioActual.setPrecio(itinerarioDTO.getPrecio());
+			itinerarioActual.setEmbarcacion(itinerarioDTO.getEmbarcacion());
+			itinerarioActual.setDestino(itinerarioDTO.getDestino());
+			itinerarioActual.setMuelle(itinerarioDTO.getMuelle());
+			
+			itinerarioActualizado = itinerarioService.save(itinerarioActual);
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo actualizar el itinerario en la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put(MESSAGE, "El itinerario ha sido actualizado exitosamente!");
+		response.put("itinerario", itinerarioActualizado);
+		
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/itinerarios/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) {
-		itinerarioService.delete(id);
+	public ResponseEntity<Object> delete(@PathVariable Long id) {
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			itinerarioService.delete(id);
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo eliminar el itinerario en la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put(MESSAGE, "El itinerario ha sido eliminado exitosamente!");
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

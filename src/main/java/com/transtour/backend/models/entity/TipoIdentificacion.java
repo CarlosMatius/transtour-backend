@@ -24,7 +24,7 @@ public class TipoIdentificacion implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = false, length = 30)
 	private String nombre;
 	
 	/*

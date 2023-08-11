@@ -32,25 +32,28 @@ public class Usuario implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(nullable = false, length = 30)
 	private String nombre;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = false, length = 30)
 	private String apellido;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tipo_identificacion")
+	@JoinColumn(name = "tipo_identificacion", nullable = false)
 	private TipoIdentificacion tipoIdentificacion;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = false, length = 15)
 	private String identificacion;
 	
-	@Column(name = "usuario", unique = true)
+	@Column(name = "usuario", unique = true, nullable = false, length = 25)
 	private String user;
+	
+	@Column(nullable = false, length = 100)
 	private String clave;
 	private boolean enabled;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "empresa")
+	@JoinColumn(name = "empresa", nullable = false)
 	private Empresa empresa;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

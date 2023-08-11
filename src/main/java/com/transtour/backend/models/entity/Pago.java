@@ -29,12 +29,16 @@ public class Pago implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "nombre_comercio")
+	@Column(name = "nombre_comercio", nullable = false, length = 45)
 	private String nombreComercio;
+	
+	@Column(nullable = false, length = 45)
 	private String descripcion;
 	
-	@Column(name = "numero_recibo")
+	@Column(name = "numero_recibo", nullable = false, length = 45)
 	private String numeroRecibo;
+	
+	@Column(nullable = false, length = 15)
 	private String estado;
 	
 	@Column(name = "created_at")

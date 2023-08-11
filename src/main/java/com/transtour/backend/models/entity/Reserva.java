@@ -34,17 +34,17 @@ public class Reserva implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "codigo_reserva")
+	@Column(name = "codigo_reserva", nullable = false, length = 10)
 	private String codigoReserva;
 	
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 	
-	@Column(precision = 10, scale = 2, length = 10)
+	@Column(precision = 10, scale = 2, length = 10, nullable = false)
     private BigDecimal total;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "itinerario")
+	@JoinColumn(name = "itinerario", nullable = false)
 	private Itinerario itinerario;
 	
 	@OneToOne(mappedBy = "reserva")

@@ -24,7 +24,7 @@ public class Destino implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = false, length = 45)
 	private String nombre;
 	
 	private boolean enabled;

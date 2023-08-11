@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.ITipoIdentificacionDao;
-import com.transtour.backend.models.dto.TipoIdentificacionDto;
+import com.transtour.backend.models.dto.TipoIdentificacionDTO;
 import com.transtour.backend.models.entity.TipoIdentificacion;
 import com.transtour.backend.models.services.ITipoIdentificacionService;
 
@@ -24,25 +24,25 @@ public class TipoIdentificacionServiceImpl implements ITipoIdentificacionService
 	
 	@Override
 	@Transactional
-	public TipoIdentificacionDto save(TipoIdentificacionDto tipoIdentificacionDto) {
+	public TipoIdentificacionDTO save(TipoIdentificacionDTO tipoIdentificacionDto) {
 		TipoIdentificacion tipoIdentificacion = modelMapper.map(tipoIdentificacionDto, TipoIdentificacion.class);
 		tipoIdentificacion = tipoIdentificacionDao.save(tipoIdentificacion);
-		return modelMapper.map(tipoIdentificacion, TipoIdentificacionDto.class);
+		return modelMapper.map(tipoIdentificacion, TipoIdentificacionDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public TipoIdentificacionDto findById(Long id) {
-		return modelMapper.map(tipoIdentificacionDao.findById(id).orElse(null), TipoIdentificacionDto.class);
+	public TipoIdentificacionDTO findById(Long id) {
+		return modelMapper.map(tipoIdentificacionDao.findById(id).orElse(null), TipoIdentificacionDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<TipoIdentificacionDto> findAll() {
-		List<TipoIdentificacionDto> dtoList = new ArrayList<>();
+	public List<TipoIdentificacionDTO> findAll() {
+		List<TipoIdentificacionDTO> dtoList = new ArrayList<>();
 		Iterable<TipoIdentificacion> tipos = tipoIdentificacionDao.findAll();
 		for(TipoIdentificacion tipoIdentificacion : tipos) {
-			TipoIdentificacionDto tipoIdentificacionDto = modelMapper.map(tipoIdentificacion, TipoIdentificacionDto.class);
+			TipoIdentificacionDTO tipoIdentificacionDto = modelMapper.map(tipoIdentificacion, TipoIdentificacionDTO.class);
 			dtoList.add(tipoIdentificacionDto);	
 		}
 		return dtoList;

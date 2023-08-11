@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IItinerarioDao;
-import com.transtour.backend.models.dto.ItinerarioDto;
+import com.transtour.backend.models.dto.ItinerarioDTO;
 import com.transtour.backend.models.entity.Itinerario;
 import com.transtour.backend.models.services.IItinerarioService;
 
@@ -24,28 +26,35 @@ public class ItinerarioServiceImpl implements IItinerarioService{
 	
 	@Override
 	@Transactional
-	public ItinerarioDto save(ItinerarioDto itinerarioDto) {
+	public ItinerarioDTO save(ItinerarioDTO itinerarioDto) {
 		Itinerario itinerario = modelMapper.map(itinerarioDto, Itinerario.class);
 		itinerario = itinerarioDao.save(itinerario);
-		return modelMapper.map(itinerario, ItinerarioDto.class);
+		return modelMapper.map(itinerario, ItinerarioDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public ItinerarioDto findById(Long id) {
-		return modelMapper.map(itinerarioDao.findById(id).orElse(null), ItinerarioDto.class);
+	public ItinerarioDTO findById(Long id) {
+		return modelMapper.map(itinerarioDao.findById(id).orElse(null), ItinerarioDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ItinerarioDto> findAll() {
-		List<ItinerarioDto> dtoList = new ArrayList<>();
+	public List<ItinerarioDTO> findAll() {
+		List<ItinerarioDTO> dtoList = new ArrayList<>();
 		Iterable<Itinerario> itinerarios = itinerarioDao.findAll();
 		for(Itinerario itinerario : itinerarios) {
-			ItinerarioDto destinoDto = modelMapper.map(itinerario, ItinerarioDto.class);
+			ItinerarioDTO destinoDto = modelMapper.map(itinerario, ItinerarioDTO.class);
 			dtoList.add(destinoDto);	
 		}
 		return dtoList;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<ItinerarioDTO> findAll(Pageable page) {
+		Page<Itinerario> paginaItinerarios = itinerarioDao.findAll(page);
+		return paginaItinerarios.map(itinerario -> modelMapper.map(itinerario, ItinerarioDTO.class));
 	}
 
 	@Override

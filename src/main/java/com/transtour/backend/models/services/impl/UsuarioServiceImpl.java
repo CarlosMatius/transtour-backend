@@ -5,11 +5,14 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IUsuarioDao;
-import com.transtour.backend.models.dto.UsuarioDto;
+import com.transtour.backend.models.dto.UsuarioDTO;
+import com.transtour.backend.models.dto.UsuarioResponse;
 import com.transtour.backend.models.entity.Usuario;
 import com.transtour.backend.models.services.IUsuarioService;
 
@@ -24,34 +27,41 @@ public class UsuarioServiceImpl implements IUsuarioService{
 
 	@Override
 	@Transactional
-	public UsuarioDto save(UsuarioDto usuarioDto) {
+	public UsuarioDTO save(UsuarioDTO usuarioDto) {
 		Usuario usuario = modelMapper.map(usuarioDto, Usuario.class);
 		usuario = usuarioDao.save(usuario);
-		return modelMapper.map(usuario, UsuarioDto.class);
+		return modelMapper.map(usuario, UsuarioDTO.class);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public UsuarioDto findById(Long id) {
-		return modelMapper.map(usuarioDao.findById(id).orElse(null), UsuarioDto.class);
+	public UsuarioDTO findById(Long id) {
+		return modelMapper.map(usuarioDao.findById(id).orElse(null), UsuarioDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public UsuarioDto findByIdentificacion(String identificacion) {
-		return modelMapper.map(usuarioDao.findByIdentificacion(identificacion).orElse(null), UsuarioDto.class);
+	public UsuarioResponse findByIdentificacion(String identificacion) {
+		return modelMapper.map(usuarioDao.findByIdentificacion(identificacion).orElse(null), UsuarioResponse.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<UsuarioDto> findAll() {
-		List<UsuarioDto> dtoList = new ArrayList<>();
+	public List<UsuarioResponse> findAll() {
+		List<UsuarioResponse> dtoList = new ArrayList<>();
 		Iterable<Usuario> usuarios = usuarioDao.findAll();
 		for(Usuario usuario : usuarios) {
-			UsuarioDto usuarioDto = modelMapper.map(usuario, UsuarioDto.class);
-			dtoList.add(usuarioDto);	
+			UsuarioResponse usuarioResponse = modelMapper.map(usuario, UsuarioResponse.class);
+			dtoList.add(usuarioResponse);	
 		}
 		return dtoList;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<UsuarioResponse> findAll(Pageable page) {
+		Page<Usuario> paginaUsuarioss = usuarioDao.findAll(page);
+		return paginaUsuarioss.map(usuario -> modelMapper.map(usuario, UsuarioResponse.class));
 	}
 
 	@Override
@@ -59,7 +69,4 @@ public class UsuarioServiceImpl implements IUsuarioService{
 	public void delete(Long id) {
 		usuarioDao.deleteById(id);
 	}
-	
-	
-
 }

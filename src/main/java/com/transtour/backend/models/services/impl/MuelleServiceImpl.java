@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IMuelleDao;
-import com.transtour.backend.models.dto.MuelleDto;
+import com.transtour.backend.models.dto.MuelleDTO;
 import com.transtour.backend.models.entity.Muelle;
 import com.transtour.backend.models.services.IMuelleService;
 
@@ -24,25 +24,25 @@ public class MuelleServiceImpl implements IMuelleService{
 
 	@Override
 	@Transactional
-	public MuelleDto save(MuelleDto muelleDto) {
+	public MuelleDTO save(MuelleDTO muelleDto) {
 		Muelle muelle = modelMapper.map(muelleDto, Muelle.class);
 		muelle = muelleDao.save(muelle);
-		return modelMapper.map(muelle, MuelleDto.class);
+		return modelMapper.map(muelle, MuelleDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public MuelleDto findById(Long id) {
-		return modelMapper.map(muelleDao.findById(id).orElse(null), MuelleDto.class);
+	public MuelleDTO findById(Long id) {
+		return modelMapper.map(muelleDao.findById(id).orElse(null), MuelleDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<MuelleDto> findAll() {
-		List<MuelleDto> dtoList = new ArrayList<>();
+	public List<MuelleDTO> findAll() {
+		List<MuelleDTO> dtoList = new ArrayList<>();
 		Iterable<Muelle> muelles = muelleDao.findAll();
 		for(Muelle muelle : muelles) {
-			MuelleDto muelleDto = modelMapper.map(muelle, MuelleDto.class);
+			MuelleDTO muelleDto = modelMapper.map(muelle, MuelleDTO.class);
 			dtoList.add(muelleDto);	
 		}
 		return dtoList;

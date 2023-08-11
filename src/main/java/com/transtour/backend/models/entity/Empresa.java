@@ -29,16 +29,16 @@ public class Empresa implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = false, length = 45)
 	private String nombre;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = false, length = 20)
 	private String nit;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = false, length = 45)
 	private String email;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = false, length = 15)
 	private String telefono;
 	private String imagen;
 	private boolean enabled;

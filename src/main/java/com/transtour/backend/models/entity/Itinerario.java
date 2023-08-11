@@ -30,30 +30,31 @@ public class Itinerario implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "fecha_embarque")
+	@Column(name = "fecha_embarque", nullable = false)
 	private LocalDate fechaEmbarque;
 	
-	@Column(name = "hora_salidad")
+	@Column(name = "hora_salidad", nullable = false)
 	private LocalTime horaSalidad;
 	
-	@Column(name = "hora_regreso")
+	@Column(name = "hora_regreso", nullable = false)
 	private LocalTime horaRegreso;
 	
+	@Column(nullable = false)
 	private int cupos;
 	
-	@Column(precision = 10, scale = 2, length = 10)
+	@Column(precision = 10, scale = 2, length = 10, nullable = false)
     private BigDecimal precio;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "embarcacion")
+	@JoinColumn(name = "embarcacion", nullable = false)
 	private Embarcacion embarcacion;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "destino")
+	@JoinColumn(name = "destino", nullable = false)
 	private Destino destino;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "muelle")
+	@JoinColumn(name = "muelle", nullable = false)
 	private Muelle muelle;
 	
 	/*

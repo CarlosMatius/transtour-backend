@@ -2,13 +2,18 @@ package com.transtour.backend.models.services;
 
 import java.util.List;
 
-import com.transtour.backend.models.dto.PagoDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.transtour.backend.models.dto.PagoDTO;
 
 public interface IPagoService {
 
-	public PagoDto save(PagoDto pagoDto);
+	public PagoDTO save(PagoDTO pagoDto);
 	
-	public PagoDto findByNombreComercio(String nombreComercio);
+	public PagoDTO findByNombreComercio(String nombreComercio);
 	
-	public List<PagoDto> findAll();
+	public List<PagoDTO> findAll();
+	
+	public Page<PagoDTO> findAll(Pageable page);
 }
