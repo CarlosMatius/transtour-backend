@@ -41,7 +41,7 @@ public class Empresa implements Serializable{
 	@Column(unique = true, nullable = false, length = 15)
 	private String telefono;
 	private String imagen;
-	private boolean enabled;
+	private Boolean enabled;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Usuario> usuarios;
@@ -60,7 +60,7 @@ public class Empresa implements Serializable{
 		this.email = builder.getEmail();
 		this.telefono = builder.getTelefono();
 		this.imagen = builder.getImagen();
-		this.enabled = builder.isEnabled();
+		this.enabled = builder.getEnabled();
 		this.usuarios = builder.getUsuarios();
 		this.embarcaciones = builder.getEmbarcaciones();
 	}

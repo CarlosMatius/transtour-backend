@@ -134,7 +134,7 @@ public class UsuarioRestController {
 			usuarioActual.setIdentificacion(usuarioDTO.getIdentificacion());
 			usuarioActual.setUser(usuarioDTO.getUser());
 			usuarioActual.setClave(usuarioDTO.getClave());
-			usuarioActual.setEnabled(usuarioDTO.isEnabled());
+			usuarioActual.setEnabled(usuarioDTO.getEnabled());
 			usuarioActual.setEmpresa(usuarioDTO.getEmpresa());
 			
 			usuarioActualizado = usuarioService.save(usuarioActual);

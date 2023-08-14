@@ -11,7 +11,7 @@ public class EmbarcacionBuilder {
 	private Long id;
 	private String nombre;
 	private int capacidad;
-	private boolean enabled;
+	private Boolean enabled;
 	private Empresa empresa;
 	
 	/*
@@ -33,7 +33,7 @@ public class EmbarcacionBuilder {
 		return this;
 	}
 	
-	public EmbarcacionBuilder enabled(boolean enabled) {
+	public EmbarcacionBuilder enabled(Boolean enabled) {
 		this.enabled = enabled;
 		return this;
 	}

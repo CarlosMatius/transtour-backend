@@ -6,6 +6,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +24,7 @@ public class PasajeroDTO implements Serializable{
 	@Size(min = 3, message = "el nombre debe ser mayor a 3 caracteres")
 	private String apellido;
 	
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private TipoIdentificacionDTO tipoIdentificacion;
 	
@@ -29,6 +32,7 @@ public class PasajeroDTO implements Serializable{
 	@Size(min = 5, message = "el numero de documento debe ser mayor a 5 caracteres")
 	private String identificacion;
 	
+	@JsonIgnoreProperties(value = {"pasajeros", "hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private ReservaDTO reserva;
 	

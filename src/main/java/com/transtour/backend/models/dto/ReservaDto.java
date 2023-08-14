@@ -9,6 +9,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,13 +28,17 @@ public class ReservaDTO implements Serializable{
 	@NotNull(message = "no puede ser vacio")
 	private BigDecimal total;
 	
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private ItinerarioDTO itinerario;
 	
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private ResponsableReservaDTO responsableReserva;
 	
 	private PagoDTO pago;
+	
+	@JsonIgnoreProperties(value = {"reserva", "hibernateLazyInitializer", "handler"}, allowSetters = true)
 	private List<PasajeroDTO> pasajeros;
 	
 	private static final long serialVersionUID = 1L;

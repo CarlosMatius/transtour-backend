@@ -9,7 +9,7 @@ public class DestinoBuilder {
 
 	private Long id;
 	private String nombre;
-	private boolean enabled;
+	private Boolean enabled;
 	
 	/*
 	 * Methods
@@ -25,7 +25,7 @@ public class DestinoBuilder {
 		return this;
 	}
 	
-	public DestinoBuilder enabled(boolean enabled) {
+	public DestinoBuilder enabled(Boolean enabled) {
 		this.enabled = enabled;
 		return this;
 	}

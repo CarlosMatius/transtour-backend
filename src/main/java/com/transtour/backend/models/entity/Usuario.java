@@ -50,7 +50,7 @@ public class Usuario implements Serializable{
 	
 	@Column(nullable = false, length = 100)
 	private String clave;
-	private boolean enabled;
+	private Boolean enabled;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa", nullable = false)
@@ -77,7 +77,7 @@ public class Usuario implements Serializable{
 		this.identificacion = builder.getIdentificacion();
 		this.user = builder.getUser();
 		this.clave = builder.getClave();
-		this.enabled = builder.isEnabled();
+		this.enabled = builder.getEnabled();
 		this.empresa = builder.getEmpresa();
 		this.roles = builder.getRoles();
 	}

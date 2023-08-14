@@ -19,7 +19,7 @@ public class UsuarioBuilder {
 	private String identificacion;
 	private String user;
 	private String clave;
-	private boolean enabled;
+	private Boolean enabled;
 	private Empresa empresa;
 	private List<Rol> roles;
 	
@@ -62,7 +62,7 @@ public class UsuarioBuilder {
 		return this;
 	}
 	
-	public UsuarioBuilder enabled(boolean enabled) {
+	public UsuarioBuilder enabled(Boolean enabled) {
 		this.enabled = enabled;
 		return this;
 	}

@@ -131,7 +131,7 @@ public class EmpresaRestController {
 			empresaActual.setNit(empresaDto.getNit());
 			empresaActual.setEmail(empresaDto.getEmail());
 			empresaActual.setTelefono(empresaDto.getTelefono());
-			empresaActual.setEnabled(empresaDto.isEnabled());
+			empresaActual.setEnabled(empresaDto.getEnabled());
 			
 			empresaActualizada = empresaService.save(empresaActual);
 		} catch (DataAccessException e) {

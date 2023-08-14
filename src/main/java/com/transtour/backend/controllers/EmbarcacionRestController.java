@@ -107,7 +107,7 @@ public class EmbarcacionRestController {
 		try {
 			embarcacionActual.setNombre(embarcacionDto.getNombre());
 			embarcacionActual.setCapacidad(embarcacionDto.getCapacidad());
-			embarcacionActual.setEnabled(embarcacionDto.isEnabled());
+			embarcacionActual.setEnabled(embarcacionDto.getEnabled());
 			
 			embarcacionActualizada = embarcacionService.save(embarcacionActual);
 		} catch (DataAccessException e) {

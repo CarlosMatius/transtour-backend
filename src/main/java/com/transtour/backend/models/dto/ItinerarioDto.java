@@ -7,6 +7,8 @@ import java.time.LocalTime;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,12 +32,15 @@ public class ItinerarioDTO implements Serializable{
 	@NotNull(message = "no puede ser vacio")
 	private BigDecimal precio;
 	
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private EmbarcacionDTO embarcacion;
 	
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private DestinoDTO destino;
 	
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private MuelleDTO muelle;
 	

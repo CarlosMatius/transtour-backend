@@ -7,6 +7,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +25,7 @@ public class UsuarioDTO implements Serializable{
 	@Size(min = 5, message = "el apellido debe ser mayor a 5 caracteres")
 	private String apellido;
 	
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private TipoIdentificacionDTO tipoIdentificacion;
 	
@@ -36,8 +39,9 @@ public class UsuarioDTO implements Serializable{
 	
 	@NotEmpty(message = "no puede ser vacio")
 	private String clave;
-	private boolean enabled;
+	private Boolean enabled;
 	
+	@JsonIgnoreProperties(value = {"usuarios","hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private EmpresaDTO empresa;
 	

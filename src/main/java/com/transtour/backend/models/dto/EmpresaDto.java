@@ -7,6 +7,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,8 +33,12 @@ public class EmpresaDTO implements Serializable{
 	private String telefono;
 	
 	private String imagen;
-	private boolean enabled;
+	private Boolean enabled;
+	
+	@JsonIgnoreProperties(value = {"empresa", "hibernateLazyInitializer", "handler"}, allowSetters = true)
 	private List<UsuarioDTO> usuarios;
+	
+	@JsonIgnoreProperties(value = {"empresa", "hibernateLazyInitializer", "handler"}, allowSetters = true)
 	private List<EmbarcacionDTO> embarcaciones;
 	
 	private static final long serialVersionUID = 1L;

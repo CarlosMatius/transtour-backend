@@ -76,6 +76,16 @@ public class Reserva implements Serializable{
 		this.createdAt = LocalDateTime.now();
     }
 	
+	public BigDecimal getTotal() {
+		
+		int tamanoArray = pasajeros.size();
+		BigDecimal totalPasajero = new BigDecimal(tamanoArray);
+		
+		total = totalPasajero.multiply(itinerario.getPrecio());
+		
+		return total;
+	}
+	
 	private static final long serialVersionUID = 1L;
 
 }

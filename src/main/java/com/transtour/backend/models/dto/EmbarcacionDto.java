@@ -6,6 +6,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +22,9 @@ public class EmbarcacionDTO implements Serializable{
 	
 	@NotNull(message = "no puede ser vacio")
 	private int capacidad;
-	private boolean enabled;
+	private Boolean enabled;
 	
+	@JsonIgnoreProperties(value = {"embarcaciones","hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private EmpresaDTO empresa;
 	

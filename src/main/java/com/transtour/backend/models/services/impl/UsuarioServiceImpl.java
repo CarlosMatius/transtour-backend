@@ -2,11 +2,20 @@ package com.transtour.backend.models.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +26,9 @@ import com.transtour.backend.models.entity.Usuario;
 import com.transtour.backend.models.services.IUsuarioService;
 
 @Service
-public class UsuarioServiceImpl implements IUsuarioService{
+public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService{
+	
+	private Logger log = LoggerFactory.getLogger(UsuarioServiceImpl.class);
 	
 	@Autowired
 	private IUsuarioDao usuarioDao;
@@ -44,6 +55,12 @@ public class UsuarioServiceImpl implements IUsuarioService{
 	public UsuarioResponse findByIdentificacion(String identificacion) {
 		return modelMapper.map(usuarioDao.findByIdentificacion(identificacion).orElse(null), UsuarioResponse.class);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public UsuarioResponse findByUser(String user) {
+		return modelMapper.map(usuarioDao.findByUser(user), UsuarioResponse.class);
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -68,5 +85,24 @@ public class UsuarioServiceImpl implements IUsuarioService{
 	@Transactional
 	public void delete(Long id) {
 		usuarioDao.deleteById(id);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
+		UsuarioDTO usuarioDTO = modelMapper.map(usuarioDao.findByUser(username), UsuarioDTO.class);
+		
+		if(usuarioDTO == null) {
+			log.error("Error en el login: no existe el usuario {} en el sistema", username);
+			throw new UsernameNotFoundException("Error en el login: no existe el usuario '"+username+"' el sistema");
+		}
+		
+		List<GrantedAuthority> authorities = usuarioDTO.getRoles()
+				.stream()
+				.map(role -> new SimpleGrantedAuthority(role.getNombre()))
+				.collect(Collectors.toList());
+				
+		return new User(usuarioDTO.getUser(), usuarioDTO.getClave(), usuarioDTO.getEnabled(), true, true, true, authorities);
 	}
 }

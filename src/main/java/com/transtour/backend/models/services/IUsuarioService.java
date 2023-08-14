@@ -16,6 +16,8 @@ public interface IUsuarioService {
 	
 	public UsuarioResponse findByIdentificacion(String identificacion);
 	
+	public UsuarioResponse findByUser(String user);
+	
 	public List<UsuarioResponse> findAll();
 	
 	public Page<UsuarioResponse> findAll(Pageable page);
