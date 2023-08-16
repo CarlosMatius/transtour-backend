@@ -68,7 +68,7 @@ public class UsuarioRestController {
 	}
 	
 	@GetMapping("/usuarios/page/{page}")
-	public Page<UsuarioResponse> index(@PathVariable Integer page) {
+	public Page<UsuarioResponse> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return usuarioService.findAll(pageable);
 	}
@@ -132,9 +132,9 @@ public class UsuarioRestController {
 			usuarioActual.setApellido(usuarioDTO.getApellido());
 			usuarioActual.setTipoIdentificacion(usuarioDTO.getTipoIdentificacion());
 			usuarioActual.setIdentificacion(usuarioDTO.getIdentificacion());
-			usuarioActual.setUser(usuarioDTO.getUser());
-			usuarioActual.setClave(usuarioDTO.getClave());
-			usuarioActual.setEnabled(usuarioDTO.getEnabled());
+			usuarioActual.setUsername(usuarioDTO.getUsername());
+			usuarioActual.setPassword(usuarioDTO.getPassword());
+			usuarioActual.setEnabled(usuarioDTO.isEnabled());
 			usuarioActual.setEmpresa(usuarioDTO.getEmpresa());
 			
 			usuarioActualizado = usuarioService.save(usuarioActual);

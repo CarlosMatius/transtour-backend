@@ -33,10 +33,10 @@ public class EmpresaDTO implements Serializable{
 	private String telefono;
 	
 	private String imagen;
-	private Boolean enabled;
+	private boolean enabled;
 	
 	@JsonIgnoreProperties(value = {"empresa", "hibernateLazyInitializer", "handler"}, allowSetters = true)
-	private List<UsuarioDTO> usuarios;
+	private List<UsuarioResponse> usuarios;
 	
 	@JsonIgnoreProperties(value = {"empresa", "hibernateLazyInitializer", "handler"}, allowSetters = true)
 	private List<EmbarcacionDTO> embarcaciones;

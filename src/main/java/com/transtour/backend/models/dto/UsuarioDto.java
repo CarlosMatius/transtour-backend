@@ -35,11 +35,12 @@ public class UsuarioDTO implements Serializable{
 	
 	@NotEmpty(message = "no puede ser vacio")
 	@Size(min = 5, message = "el usuario debe ser mayor a 5 caracteres")
-	private String user;
+	private String username;
 	
 	@NotEmpty(message = "no puede ser vacio")
-	private String clave;
-	private Boolean enabled;
+	private String password;
+	
+	private boolean enabled;
 	
 	@JsonIgnoreProperties(value = {"usuarios","hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")

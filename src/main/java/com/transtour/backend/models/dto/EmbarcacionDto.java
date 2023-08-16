@@ -24,7 +24,7 @@ public class EmbarcacionDTO implements Serializable{
 	private int capacidad;
 	private Boolean enabled;
 	
-	@JsonIgnoreProperties(value = {"embarcaciones","hibernateLazyInitializer", "handler"}, allowSetters = true)
+	@JsonIgnoreProperties(value = {"embarcaciones","usuarios", "hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")
 	private EmpresaDTO empresa;
 	

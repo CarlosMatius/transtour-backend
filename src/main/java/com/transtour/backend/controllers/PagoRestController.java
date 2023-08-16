@@ -43,19 +43,19 @@ public class PagoRestController {
 	}
 	
 	@GetMapping("/pagos/page/{page}")
-	public Page<PagoDTO> index(@PathVariable Integer page) {
+	public Page<PagoDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return pagoservice.findAll(pageable);
 	}
 	
-	@GetMapping("/pagos/{nombreComercio}")
-	public ResponseEntity<Object> show(@PathVariable String nombreComercio) {
+	@GetMapping("/pagos/{numeroRecibo}")
+	public ResponseEntity<Object> show(@PathVariable String numeroRecibo) {
 		
 		PagoDTO pagoDTO;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			pagoDTO = pagoservice.findByNombreComercio(nombreComercio);
+			pagoDTO = pagoservice.findByNumeroRecibo(numeroRecibo);
 			
 		} catch (DataAccessException e) {
 			response.put(MESSAGE, "No se pudo realizar la consulta a la base de datos");
@@ -64,7 +64,7 @@ public class PagoRestController {
 		}
 		
 		if(pagoDTO == null) {
-			response.put(MESSAGE, "El pago con numero de recibo: " + nombreComercio +" No existe en el sistema");
+			response.put(MESSAGE, "El pago con numero de recibo: " + numeroRecibo +" No existe en el sistema");
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(pagoDTO, HttpStatus.OK);

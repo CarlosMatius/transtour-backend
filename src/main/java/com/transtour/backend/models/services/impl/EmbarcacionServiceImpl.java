@@ -35,7 +35,7 @@ public class EmbarcacionServiceImpl implements IEmbarcacionService{
 	@Override
 	@Transactional(readOnly = true)
 	public EmbarcacionDTO findById(Long id) {
-		return modelMapper.map(embarcacionDao.findById(id).orElse(null), EmbarcacionDTO.class);
+		return modelMapper.map(embarcacionDao.findById(id), EmbarcacionDTO.class);
 	}
 
 	@Override

@@ -22,13 +22,13 @@ public class InfoAdditionalToken implements TokenEnhancer{
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 		
-		UsuarioResponse usuario = usuarioService.findByUser(authentication.getName());
+		UsuarioResponse usuario = usuarioService.findByUsername(authentication.getName());
 
 		Map<String, Object> info = new HashMap<>();
 		info.put("info aditional", "Hola que tal " + usuario.getNombre() + " " + usuario.getApellido());
 		info.put("usuario Id", usuario.getId());
-		info.put("empresa Id", usuario.getEmpresa().getId());
-		info.put("nombre empresa", usuario.getEmpresa().getNombre());
+		//info.put("empresa Id", usuario.getEmpresa().getId());
+		//info.put("nombre empresa", usuario.getEmpresa().getNombre());
 		
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
 		

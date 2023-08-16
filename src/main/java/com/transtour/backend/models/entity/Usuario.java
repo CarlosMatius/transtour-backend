@@ -46,14 +46,15 @@ public class Usuario implements Serializable{
 	private String identificacion;
 	
 	@Column(name = "usuario", unique = true, nullable = false, length = 25)
-	private String user;
+	private String username;
 	
-	@Column(nullable = false, length = 100)
-	private String clave;
-	private Boolean enabled;
+	@Column(name = "clave",nullable = false, length = 100)
+	private String password;
+	
+	private boolean enabled;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "empresa", nullable = false)
+	@JoinColumn(name = "empresa", nullable = true)
 	private Empresa empresa;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -75,9 +76,9 @@ public class Usuario implements Serializable{
 		this.apellido = builder.getApellido();
 		this.tipoIdentificacion = builder.getTipoIdentificacion();
 		this.identificacion = builder.getIdentificacion();
-		this.user = builder.getUser();
-		this.clave = builder.getClave();
-		this.enabled = builder.getEnabled();
+		this.username = builder.getUsername();
+		this.password = builder.getPassword();
+		this.enabled = builder.isEnabled();
 		this.empresa = builder.getEmpresa();
 		this.roles = builder.getRoles();
 	}

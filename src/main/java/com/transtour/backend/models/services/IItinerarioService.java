@@ -1,5 +1,6 @@
 package com.transtour.backend.models.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -9,9 +10,11 @@ import com.transtour.backend.models.dto.ItinerarioDTO;
 
 public interface IItinerarioService {
 
-	public ItinerarioDTO save(ItinerarioDTO itinerarioDto);
+	public ItinerarioDTO save(ItinerarioDTO itinerarioDTO);
 	
 	public ItinerarioDTO findById(Long id);
+	
+	public List<ItinerarioDTO> findByFechaAndDestino(LocalDate fechaEmbarque, String nombreDestino);
 	
 	public List<ItinerarioDTO> findAll();
 	

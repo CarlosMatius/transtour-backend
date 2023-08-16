@@ -33,7 +33,6 @@ public class ReservaDTO implements Serializable{
 	private ItinerarioDTO itinerario;
 	
 	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
-	@NotNull(message = "no puede ser vacio")
 	private ResponsableReservaDTO responsableReserva;
 	
 	private PagoDTO pago;

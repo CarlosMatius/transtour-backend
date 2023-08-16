@@ -11,7 +11,7 @@ public interface IPagoService {
 
 	public PagoDTO save(PagoDTO pagoDto);
 	
-	public PagoDTO findByNombreComercio(String nombreComercio);
+	public PagoDTO findByNumeroRecibo(String numeroRecibo);
 	
 	public List<PagoDTO> findAll();
 	

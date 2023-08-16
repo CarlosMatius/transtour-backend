@@ -16,7 +16,7 @@ public class ItinerarioBuilder {
 
 	private Long id;
 	private LocalDate fechaEmbarque;
-	private LocalTime horaSalidad;
+	private LocalTime horaSalida;
 	private LocalTime horaRegreso;
 	private int cupos;
 	private BigDecimal precio;
@@ -34,8 +34,8 @@ public class ItinerarioBuilder {
 		return this;
 	}
 	
-	public ItinerarioBuilder horaSalidad(LocalTime horaSalidad) {
-		this.horaSalidad = horaSalidad;
+	public ItinerarioBuilder horaSalidad(LocalTime horaSalida) {
+		this.horaSalida = horaSalida;
 		return this;
 	}
 	

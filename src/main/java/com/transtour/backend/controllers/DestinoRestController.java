@@ -46,7 +46,7 @@ public class DestinoRestController {
 	}
 	
 	@GetMapping("/destinos/page/{page}")
-	public Page<DestinoDTO> index(@PathVariable Integer page) {
+	public Page<DestinoDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return destinoService.findAll(pageable);
 	}

@@ -35,13 +35,13 @@ public class ReservaServiceImpl implements IReservaService{
 	@Override
 	@Transactional(readOnly = true)
 	public ReservaDTO findById(Long id) {
-		return modelMapper.map(reservaDao.findById(id).orElse(null), ReservaDTO.class);
+		return modelMapper.map(reservaDao.findById(id), ReservaDTO.class);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public ReservaDTO findByCodigoReserva(String codigoReserva) {
-		return modelMapper.map(reservaDao.findByCodigoReserva(codigoReserva).orElse(null), ReservaDTO.class);
+		return modelMapper.map(reservaDao.findByCodigoReserva(codigoReserva), ReservaDTO.class);
 	}
 
 	@Override

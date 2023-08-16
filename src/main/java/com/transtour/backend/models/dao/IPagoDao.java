@@ -10,5 +10,5 @@ import com.transtour.backend.models.entity.Pago;
 public interface IPagoDao extends JpaRepository<Pago, Long>{
 
 	@Transactional(readOnly = true)
-	Optional<Pago> findByNombreComercio(String nombreComercio);
+	Optional<Pago> findByNumeroRecibo(String numeroRecibo);
 }

@@ -12,17 +12,23 @@ import lombok.Setter;
 public class UsuarioResponse implements Serializable{
 
 	private Long id;
+	
 	private String nombre;
+	
 	private String apellido;
 	
 	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	private TipoIdentificacionDTO tipoIdentificacion;
-	private String identificacion;
-	private String user;
-	private Boolean enabled;
 	
-	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
+	private String identificacion;
+	
+	private String username;
+	
+	private boolean enabled;
+	
+	@JsonIgnoreProperties(value = {"usuarios", "embarcaciones","hibernateLazyInitializer", "handler"}, allowSetters = true)
 	private EmpresaDTO empresa;
+	
 	private List<RolDTO> roles;
 	
 	private static final long serialVersionUID = 1L;

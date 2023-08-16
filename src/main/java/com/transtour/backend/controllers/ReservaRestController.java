@@ -66,7 +66,7 @@ public class ReservaRestController {
 	}
 	
 	@GetMapping("/reservas/page/{page}")
-	public Page<ReservaDTO> index(@PathVariable Integer page) {
+	public Page<ReservaDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return reservaService.findAll(pageable);
 	}

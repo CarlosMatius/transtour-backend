@@ -17,7 +17,7 @@ public class EmpresaBuilder {
 	private String email;
 	private String telefono;
 	private String imagen;
-	private Boolean enabled;
+	private boolean enabled;
 	private List<Usuario> usuarios;
 	private List<Embarcacion> embarcaciones;
 	
@@ -55,7 +55,7 @@ public class EmpresaBuilder {
 		return this;
 	}
 	
-	public EmpresaBuilder enabled(Boolean enabled) {
+	public EmpresaBuilder enabled(boolean enabled) {
 		this.enabled = enabled;
 		return this;
 	}

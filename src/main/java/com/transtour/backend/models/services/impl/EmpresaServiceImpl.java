@@ -35,13 +35,13 @@ public class EmpresaServiceImpl implements IEmpresaService{
 	@Override
 	@Transactional(readOnly = true)
 	public EmpresaDTO findById(Long id) {
-		return modelMapper.map(empresaDao.findById(id).orElse(null), EmpresaDTO.class);
+		return modelMapper.map(empresaDao.findById(id), EmpresaDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public EmpresaDTO findByNit(String nit) {
-		return modelMapper.map(empresaDao.findByNit(nit).orElse(null), EmpresaDTO.class);
+		return modelMapper.map(empresaDao.findByNit(nit), EmpresaDTO.class);
 	}
 
 	@Override

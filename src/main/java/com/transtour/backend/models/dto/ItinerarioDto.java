@@ -21,7 +21,7 @@ public class ItinerarioDTO implements Serializable{
 	private LocalDate fechaEmbarque;
 	
 	@NotNull(message = "no puede ser vacio")
-	private LocalTime horaSalidad;
+	private LocalTime horaSalida;
 	
 	@NotNull(message = "no puede ser vacio")
 	private LocalTime horaRegreso;

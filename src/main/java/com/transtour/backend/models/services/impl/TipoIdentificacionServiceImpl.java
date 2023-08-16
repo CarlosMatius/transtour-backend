@@ -33,7 +33,7 @@ public class TipoIdentificacionServiceImpl implements ITipoIdentificacionService
 	@Override
 	@Transactional(readOnly = true)
 	public TipoIdentificacionDTO findById(Long id) {
-		return modelMapper.map(tipoIdentificacionDao.findById(id).orElse(null), TipoIdentificacionDTO.class);
+		return modelMapper.map(tipoIdentificacionDao.findById(id), TipoIdentificacionDTO.class);
 	}
 
 	@Override

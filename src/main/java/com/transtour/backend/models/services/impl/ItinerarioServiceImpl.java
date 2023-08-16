@@ -1,5 +1,6 @@
 package com.transtour.backend.models.services.impl;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +27,8 @@ public class ItinerarioServiceImpl implements IItinerarioService{
 	
 	@Override
 	@Transactional
-	public ItinerarioDTO save(ItinerarioDTO itinerarioDto) {
-		Itinerario itinerario = modelMapper.map(itinerarioDto, Itinerario.class);
+	public ItinerarioDTO save(ItinerarioDTO itinerarioDTO) {
+		Itinerario itinerario = modelMapper.map(itinerarioDTO, Itinerario.class);
 		itinerario = itinerarioDao.save(itinerario);
 		return modelMapper.map(itinerario, ItinerarioDTO.class);
 	}
@@ -35,7 +36,19 @@ public class ItinerarioServiceImpl implements IItinerarioService{
 	@Override
 	@Transactional(readOnly = true)
 	public ItinerarioDTO findById(Long id) {
-		return modelMapper.map(itinerarioDao.findById(id).orElse(null), ItinerarioDTO.class);
+		return modelMapper.map(itinerarioDao.findById(id), ItinerarioDTO.class);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public  List<ItinerarioDTO> findByFechaAndDestino(LocalDate fechaEmbarque, String nombreDestino) {
+		List<ItinerarioDTO> dtoList = new ArrayList<>();
+		Iterable<Itinerario> itinerarios = itinerarioDao.findByFechaAndDestino(fechaEmbarque, nombreDestino);
+		for(Itinerario itinerario : itinerarios) {
+			ItinerarioDTO destinoDto = modelMapper.map(itinerario, ItinerarioDTO.class);
+			dtoList.add(destinoDto);
+		}
+		return dtoList;
 	}
 
 	@Override

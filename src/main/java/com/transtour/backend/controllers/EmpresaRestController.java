@@ -50,6 +50,7 @@ public class EmpresaRestController {
 	private static final String MESSAGE = "message";
 	private static final String ERROR = "error";
 	private static final String CARPETA = "uploads";
+	private static final String EMPRESA = "empresa";
 	private final Logger log = LoggerFactory.getLogger(EmpresaRestController.class);
 	
 	@Autowired
@@ -66,7 +67,7 @@ public class EmpresaRestController {
 	}
 	
 	@GetMapping("/empresas/page/{page}")
-	public Page<EmpresaDTO> index(@PathVariable Integer page) {
+	public Page<EmpresaDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return empresaService.findAll(pageable);
 	}
@@ -98,7 +99,7 @@ public class EmpresaRestController {
 		}
 		
 		response.put(MESSAGE, "La empresa ha sido registrada exitosamente!");
-		response.put("destino", empresaNew);
+		response.put(EMPRESA, empresaNew);
 		
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
@@ -131,7 +132,7 @@ public class EmpresaRestController {
 			empresaActual.setNit(empresaDto.getNit());
 			empresaActual.setEmail(empresaDto.getEmail());
 			empresaActual.setTelefono(empresaDto.getTelefono());
-			empresaActual.setEnabled(empresaDto.getEnabled());
+			empresaActual.setEnabled(empresaDto.isEnabled());
 			
 			empresaActualizada = empresaService.save(empresaActual);
 		} catch (DataAccessException e) {
@@ -140,8 +141,8 @@ public class EmpresaRestController {
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
+		response.put(EMPRESA, empresaActualizada);
 		response.put(MESSAGE, "La empresa ha sido actualizada exitosamente!");
-		response.put("empresa", empresaActualizada);
 		
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -212,7 +213,7 @@ public class EmpresaRestController {
 			
 			empresaService.save(empresaDTO);
 			
-			response.put("empresa", empresaDTO);
+			response.put(EMPRESA, empresaDTO);
 			response.put(MESSAGE, "Has subido correctamente la imagen: " + nombreArchivo);
 		}
 		

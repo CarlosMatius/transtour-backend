@@ -35,7 +35,7 @@ public class DestinoServiceImpl implements IDestinoService{
 	@Override
 	@Transactional(readOnly = true)
 	public DestinoDTO findById(Long id) {
-		return modelMapper.map(destinoDao.findById(id).orElse(null), DestinoDTO.class);
+		return modelMapper.map(destinoDao.findById(id), DestinoDTO.class);
 	}
 	
 	@Override

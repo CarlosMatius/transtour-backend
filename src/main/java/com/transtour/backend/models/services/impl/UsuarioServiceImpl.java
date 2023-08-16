@@ -47,19 +47,19 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService{
 	@Override
 	@Transactional(readOnly = true)
 	public UsuarioDTO findById(Long id) {
-		return modelMapper.map(usuarioDao.findById(id).orElse(null), UsuarioDTO.class);
+		return modelMapper.map(usuarioDao.findById(id), UsuarioDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public UsuarioResponse findByIdentificacion(String identificacion) {
-		return modelMapper.map(usuarioDao.findByIdentificacion(identificacion).orElse(null), UsuarioResponse.class);
+		return modelMapper.map(usuarioDao.findByIdentificacion(identificacion), UsuarioResponse.class);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public UsuarioResponse findByUser(String user) {
-		return modelMapper.map(usuarioDao.findByUser(user), UsuarioResponse.class);
+	public UsuarioResponse findByUsername(String user) {
+		return modelMapper.map(usuarioDao.findByUsername(user), UsuarioResponse.class);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService{
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		UsuarioDTO usuarioDTO = modelMapper.map(usuarioDao.findByUser(username), UsuarioDTO.class);
+		UsuarioDTO usuarioDTO = modelMapper.map(usuarioDao.findByUsername(username), UsuarioDTO.class);
 		
 		if(usuarioDTO == null) {
 			log.error("Error en el login: no existe el usuario {} en el sistema", username);
@@ -103,6 +103,6 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService{
 				.map(role -> new SimpleGrantedAuthority(role.getNombre()))
 				.collect(Collectors.toList());
 				
-		return new User(usuarioDTO.getUser(), usuarioDTO.getClave(), usuarioDTO.getEnabled(), true, true, true, authorities);
+		return new User(usuarioDTO.getUsername(), usuarioDTO.getPassword(), usuarioDTO.isEnabled(), true, true, true, authorities);
 	}
 }

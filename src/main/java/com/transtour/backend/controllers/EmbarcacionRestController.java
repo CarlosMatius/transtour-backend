@@ -45,7 +45,7 @@ public class EmbarcacionRestController {
 	}
 	
 	@GetMapping("/embarcaciones/page/{page}")
-	public Page<EmbarcacionDTO> index(@PathVariable Integer page) {
+	public Page<EmbarcacionDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return embarcacionService.findAll(pageable);
 	}

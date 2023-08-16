@@ -1,5 +1,7 @@
 package com.transtour.backend.controllers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.transtour.backend.models.dto.EmbarcacionDTO;
 import com.transtour.backend.models.dto.ItinerarioDTO;
+import com.transtour.backend.models.services.IEmbarcacionService;
 import com.transtour.backend.models.services.IItinerarioService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -38,6 +42,9 @@ public class ItinerarioRestController {
 
 	@Autowired
 	private IItinerarioService itinerarioService;
+	
+	@Autowired
+	private IEmbarcacionService embarcacionService;
 
 	@GetMapping("/itinerarios")
 	public List<ItinerarioDTO> index() {
@@ -45,14 +52,38 @@ public class ItinerarioRestController {
 	}
 	
 	@GetMapping("/itinerarios/page/{page}")
-	public Page<ItinerarioDTO> index(@PathVariable Integer page) {
+	public Page<ItinerarioDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return itinerarioService.findAll(pageable);
+	}
+	
+	@GetMapping("/itinerarios/{fechaEmbarque}/{nombreDestino}")
+	public ResponseEntity<Object> findByItinerario(@PathVariable String fechaEmbarque, @PathVariable String nombreDestino) {
+		
+		List<ItinerarioDTO> itinerariosDTO;
+		Map<String, Object> response = new HashMap<>();
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate fecha = LocalDate.parse(fechaEmbarque, formato);
+		
+		try {
+			itinerariosDTO = itinerarioService.findByFechaAndDestino(fecha, nombreDestino);
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo realizar la consulta a la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		if(itinerariosDTO.isEmpty()) {
+			response.put(MESSAGE, "No hay itinerarios disponibles con esos datos");
+			return new ResponseEntity<> (response, HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(itinerariosDTO, HttpStatus.OK);
 	}
 	
 	@PostMapping("/itinerarios")
 	public ResponseEntity<Object> create(@Valid @RequestBody ItinerarioDTO itinerarioDTO, BindingResult result) {
 		
+		EmbarcacionDTO embarcacion;
 		ItinerarioDTO itinerarioNew;
 		Map<String, Object> response = new HashMap<>();
 		
@@ -67,7 +98,8 @@ public class ItinerarioRestController {
 		}
 		
 		try {
-			
+			embarcacion = embarcacionService.findById(itinerarioDTO.getEmbarcacion().getId());
+			itinerarioDTO.setCupos(embarcacion.getCapacidad());
 			itinerarioNew = itinerarioService.save(itinerarioDTO);
 			
 		} catch (DataAccessException e) {
@@ -106,7 +138,7 @@ public class ItinerarioRestController {
 		
 		try {
 			itinerarioActual.setFechaEmbarque(itinerarioDTO.getFechaEmbarque());
-			itinerarioActual.setHoraSalidad(itinerarioDTO.getHoraSalidad());
+			itinerarioActual.setHoraSalida(itinerarioDTO.getHoraSalida());
 			itinerarioActual.setHoraRegreso(itinerarioDTO.getHoraRegreso());
 			itinerarioActual.setPrecio(itinerarioDTO.getPrecio());
 			itinerarioActual.setEmbarcacion(itinerarioDTO.getEmbarcacion());

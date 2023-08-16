@@ -34,8 +34,8 @@ public class PagoServiceImpl implements IPagoService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public PagoDTO findByNombreComercio(String nombreComercio) {
-		return modelMapper.map(pagooDao.findByNombreComercio(nombreComercio).orElse(null), PagoDTO.class);
+	public PagoDTO findByNumeroRecibo(String numeroRecibo) {
+		return modelMapper.map(pagooDao.findByNumeroRecibo(numeroRecibo), PagoDTO.class);
 	}
 
 	@Override

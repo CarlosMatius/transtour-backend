@@ -31,6 +31,6 @@ public class PasajeroServiceImpl implements IPasajeroService{
 	@Override
 	@Transactional(readOnly = true)
 	public PasajeroDTO findById(Long id) {
-		return modelMapper.map(pasajeroDao.findById(id).orElse(null), PasajeroDTO.class);
+		return modelMapper.map(pasajeroDao.findById(id), PasajeroDTO.class);
 	}
 }

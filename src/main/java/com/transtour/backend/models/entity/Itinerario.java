@@ -33,8 +33,8 @@ public class Itinerario implements Serializable{
 	@Column(name = "fecha_embarque", nullable = false)
 	private LocalDate fechaEmbarque;
 	
-	@Column(name = "hora_salidad", nullable = false)
-	private LocalTime horaSalidad;
+	@Column(name = "hora_salida", nullable = false)
+	private LocalTime horaSalida;
 	
 	@Column(name = "hora_regreso", nullable = false)
 	private LocalTime horaRegreso;
@@ -63,7 +63,7 @@ public class Itinerario implements Serializable{
 	public Itinerario(ItinerarioBuilder builder) {
 		this.id = builder.getId();
 		this.fechaEmbarque = builder.getFechaEmbarque();
-		this.horaSalidad = builder.getHoraSalidad();
+		this.horaSalida = builder.getHoraSalida();
 		this.horaRegreso = builder.getHoraRegreso();
 		this.cupos = builder.getCupos();
 		this.precio = builder.getPrecio();
@@ -73,4 +73,9 @@ public class Itinerario implements Serializable{
 	}
 	
 	private static final long serialVersionUID = 1L;
+	
+	public void setCupos() {
+		this.cupos = embarcacion.getCapacidad();
+	}
+	
 }

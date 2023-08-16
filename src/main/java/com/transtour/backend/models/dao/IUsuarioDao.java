@@ -12,9 +12,5 @@ public interface IUsuarioDao extends JpaRepository<Usuario, Long>{
 	Optional<Usuario> findByIdentificacion(String identificacion);
 	
 	@Transactional(readOnly = true)
-	public Usuario findByUser(String user);
-	
-	/*@Transactional(readOnly = true)
-	@Query("select u from User u where u.user=?1 and u.empresa?2")
-	public Usuario findByUser2(String user, Empresa empresa);*/
+	public Usuario findByUsername(String user);
 }

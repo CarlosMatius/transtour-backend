@@ -17,9 +17,9 @@ public class UsuarioBuilder {
 	private String apellido;
 	private TipoIdentificacion tipoIdentificacion;
 	private String identificacion;
-	private String user;
-	private String clave;
-	private Boolean enabled;
+	private String username;
+	private String password;
+	private boolean enabled;
 	private Empresa empresa;
 	private List<Rol> roles;
 	
@@ -52,17 +52,17 @@ public class UsuarioBuilder {
 		return this;
 	}
 	
-	public UsuarioBuilder user(String user) {
-		this.user = user;
+	public UsuarioBuilder username(String username) {
+		this.username = username;
 		return this;
 	}
 	
-	public UsuarioBuilder clave(String clave) {
-		this.clave = clave;
+	public UsuarioBuilder password(String password) {
+		this.password = password;
 		return this;
 	}
 	
-	public UsuarioBuilder enabled(Boolean enabled) {
+	public UsuarioBuilder enabled(boolean enabled) {
 		this.enabled = enabled;
 		return this;
 	}

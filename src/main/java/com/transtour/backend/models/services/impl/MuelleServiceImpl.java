@@ -33,7 +33,7 @@ public class MuelleServiceImpl implements IMuelleService{
 	@Override
 	@Transactional(readOnly = true)
 	public MuelleDTO findById(Long id) {
-		return modelMapper.map(muelleDao.findById(id).orElse(null), MuelleDTO.class);
+		return modelMapper.map(muelleDao.findById(id), MuelleDTO.class);
 	}
 
 	@Override

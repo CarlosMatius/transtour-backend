@@ -16,7 +16,7 @@ public interface IUsuarioService {
 	
 	public UsuarioResponse findByIdentificacion(String identificacion);
 	
-	public UsuarioResponse findByUser(String user);
+	public UsuarioResponse findByUsername(String user);
 	
 	public List<UsuarioResponse> findAll();
 	
