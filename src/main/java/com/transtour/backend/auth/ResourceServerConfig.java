@@ -31,7 +31,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         			.antMatchers(HttpMethod.POST, "/v1/embarcaciones").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
         			.antMatchers(HttpMethod.PUT, "/v1/embarcaciones/{id}").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
         			.antMatchers(HttpMethod.DELETE, "/v1/embarcaciones/{id}").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.GET, "/v1/empresas").hasRole(SUPERADMINISTRADOR)
         			.antMatchers(HttpMethod.GET, "/v1/empresas/{nit}").hasRole(SUPERADMINISTRADOR)
         			.antMatchers(HttpMethod.GET, "/v1/empresas/page/**").hasRole(SUPERADMINISTRADOR)
         			.antMatchers(HttpMethod.POST, "/v1/empresas").hasRole(SUPERADMINISTRADOR)

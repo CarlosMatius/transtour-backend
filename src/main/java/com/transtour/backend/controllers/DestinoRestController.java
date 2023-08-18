@@ -107,7 +107,7 @@ public class DestinoRestController {
 		
 		try {
 			destinoActual.setNombre(destinoDTO.getNombre());
-			destinoActual.setEnabled(destinoDTO.getEnabled());
+			destinoActual.setEnabled(destinoDTO.isEnabled());
 			
 			destinoActualizado = destinoService.save(destinoActual);
 		} catch (DataAccessException e) {

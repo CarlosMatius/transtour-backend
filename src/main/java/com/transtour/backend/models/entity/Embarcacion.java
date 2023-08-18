@@ -30,7 +30,7 @@ public class Embarcacion implements Serializable{
 	private String nombre;
 	@Column(nullable = false)
 	private int capacidad;
-	private Boolean enabled;
+	private boolean enabled;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa", nullable = false)
@@ -44,7 +44,7 @@ public class Embarcacion implements Serializable{
 		this.id = builder.getId();
 		this.nombre = builder.getNombre();
 		this.capacidad = builder.getCapacidad();
-		this.enabled = builder.getEnabled();
+		this.enabled = builder.isEnabled();
 		this.empresa = builder.getEmpresa();
 	}
 	

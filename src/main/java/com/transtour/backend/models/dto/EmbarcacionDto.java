@@ -22,7 +22,7 @@ public class EmbarcacionDTO implements Serializable{
 	
 	@NotNull(message = "no puede ser vacio")
 	private int capacidad;
-	private Boolean enabled;
+	private boolean enabled;
 	
 	@JsonIgnoreProperties(value = {"embarcaciones","usuarios", "hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@NotNull(message = "no puede ser vacio")

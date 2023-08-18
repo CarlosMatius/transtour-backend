@@ -27,7 +27,7 @@ public class Destino implements Serializable{
 	@Column(unique = true, nullable = false, length = 45)
 	private String nombre;
 	
-	private Boolean enabled;
+	private boolean enabled;
 	
 	/*
 	 * Constructors
@@ -36,7 +36,7 @@ public class Destino implements Serializable{
 	public Destino(DestinoBuilder builder) {
 		this.id = builder.getId();
 		this.nombre = builder.getNombre();
-		this.enabled = builder.getEnabled();
+		this.enabled = builder.isEnabled();
 	}
 	
 	private static final long serialVersionUID = 1L;
