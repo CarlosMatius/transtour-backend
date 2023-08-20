@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IUsuarioDao;
 import com.transtour.backend.models.dto.UsuarioDTO;
-import com.transtour.backend.models.dto.UsuarioResponse;
+import com.transtour.backend.models.dto.response.UsuarioResponse;
 import com.transtour.backend.models.entity.Usuario;
 import com.transtour.backend.models.services.IUsuarioService;
 

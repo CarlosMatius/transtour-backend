@@ -5,17 +5,17 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.transtour.backend.models.dto.DestinoDTO;
+import com.transtour.backend.models.dto.response.DestinoResponse;
 
 public interface IDestinoService {
 	
-	public DestinoDTO save(DestinoDTO destinoDto);
+	public DestinoResponse save(DestinoResponse destinoDto);
 	
-	public DestinoDTO findById(Long id);
+	public DestinoResponse findById(Long id);
 	
-	public List<DestinoDTO> findAll();
+	public List<DestinoResponse> findAll();
 	
-	public Page<DestinoDTO> findAll(Pageable page);
+	public Page<DestinoResponse> findAll(Pageable page);
 	
 	public void delete(Long id);
 	

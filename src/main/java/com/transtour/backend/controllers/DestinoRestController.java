@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.DestinoDTO;
+import com.transtour.backend.models.dto.response.DestinoResponse;
 import com.transtour.backend.models.services.IDestinoService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -41,20 +41,20 @@ public class DestinoRestController {
 	private IDestinoService destinoService;
 
 	@GetMapping("/destinos")
-	public List<DestinoDTO> index() {
+	public List<DestinoResponse> index() {
 		return destinoService.findAll();
 	}
 	
 	@GetMapping("/destinos/page/{page}")
-	public Page<DestinoDTO> page(@PathVariable Integer page) {
+	public Page<DestinoResponse> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return destinoService.findAll(pageable);
 	}
 	
 	@PostMapping("/destinos")
-	public ResponseEntity<Object> create(@Valid @RequestBody DestinoDTO destinoDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody DestinoResponse destinoDTO, BindingResult result) {
 		
-		DestinoDTO destinoNew;
+		DestinoResponse destinoNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {
@@ -84,9 +84,9 @@ public class DestinoRestController {
 	}
 	
 	@PutMapping("/destinos/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody DestinoDTO destinoDTO, BindingResult result, @PathVariable Long id) {
-		DestinoDTO destinoActual = destinoService.findById(id);
-		DestinoDTO destinoActualizado ;
+	public ResponseEntity<Object> update(@Valid @RequestBody DestinoResponse destinoDTO, BindingResult result, @PathVariable Long id) {
+		DestinoResponse destinoActual = destinoService.findById(id);
+		DestinoResponse destinoActualizado ;
 		
 		Map<String, Object> response = new HashMap<>();
 		

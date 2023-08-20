@@ -5,19 +5,19 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.transtour.backend.models.dto.EmpresaDTO;
+import com.transtour.backend.models.dto.response.EmpresaResponse;
 
 public interface IEmpresaService {
 
-	public EmpresaDTO save(EmpresaDTO empresaDto);
+	public EmpresaResponse save(EmpresaResponse empresaDto);
 	
-	public EmpresaDTO findById(Long id);
+	public EmpresaResponse findById(Long id);
 	
-	public EmpresaDTO findByNit(String nit);
+	public EmpresaResponse findByNit(String nit);
 	
-	public List<EmpresaDTO> findAll();
+	public List<EmpresaResponse> findAll();
 	
-	public Page<EmpresaDTO> findAll(Pageable page);
+	public Page<EmpresaResponse> findAll(Pageable page);
 	
 	public void delete(Long id);
 }

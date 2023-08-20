@@ -76,6 +76,5 @@ public class Itinerario implements Serializable{
 	
 	public void setCupos() {
 		this.cupos = embarcacion.getCapacidad();
-	}
-	
+	}	
 }

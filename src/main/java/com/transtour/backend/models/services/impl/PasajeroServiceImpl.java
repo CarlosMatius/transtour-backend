@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IPasajeroDao;
-import com.transtour.backend.models.dto.PasajeroDTO;
+import com.transtour.backend.models.dto.response.PasajeroResponse;
 import com.transtour.backend.models.entity.Pasajero;
 import com.transtour.backend.models.services.IPasajeroService;
 
@@ -22,15 +22,15 @@ public class PasajeroServiceImpl implements IPasajeroService{
 
 	@Override
 	@Transactional
-	public PasajeroDTO save(PasajeroDTO pasajeroDto) {
+	public PasajeroResponse save(PasajeroResponse pasajeroDto) {
 		Pasajero pasajero = modelMapper.map(pasajeroDto, Pasajero.class);
 		pasajero = pasajeroDao.save(pasajero);
-		return modelMapper.map(pasajero, PasajeroDTO.class);
+		return modelMapper.map(pasajero, PasajeroResponse.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public PasajeroDTO findById(Long id) {
-		return modelMapper.map(pasajeroDao.findById(id), PasajeroDTO.class);
+	public PasajeroResponse findById(Long id) {
+		return modelMapper.map(pasajeroDao.findById(id), PasajeroResponse.class);
 	}
 }

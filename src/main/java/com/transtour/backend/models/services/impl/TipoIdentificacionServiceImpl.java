@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.ITipoIdentificacionDao;
-import com.transtour.backend.models.dto.TipoIdentificacionDTO;
+import com.transtour.backend.models.dto.response.TipoIdentificacionResponse;
 import com.transtour.backend.models.entity.TipoIdentificacion;
 import com.transtour.backend.models.services.ITipoIdentificacionService;
 
@@ -24,25 +24,25 @@ public class TipoIdentificacionServiceImpl implements ITipoIdentificacionService
 	
 	@Override
 	@Transactional
-	public TipoIdentificacionDTO save(TipoIdentificacionDTO tipoIdentificacionDto) {
+	public TipoIdentificacionResponse save(TipoIdentificacionResponse tipoIdentificacionDto) {
 		TipoIdentificacion tipoIdentificacion = modelMapper.map(tipoIdentificacionDto, TipoIdentificacion.class);
 		tipoIdentificacion = tipoIdentificacionDao.save(tipoIdentificacion);
-		return modelMapper.map(tipoIdentificacion, TipoIdentificacionDTO.class);
+		return modelMapper.map(tipoIdentificacion, TipoIdentificacionResponse.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public TipoIdentificacionDTO findById(Long id) {
-		return modelMapper.map(tipoIdentificacionDao.findById(id), TipoIdentificacionDTO.class);
+	public TipoIdentificacionResponse findById(Long id) {
+		return modelMapper.map(tipoIdentificacionDao.findById(id), TipoIdentificacionResponse.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<TipoIdentificacionDTO> findAll() {
-		List<TipoIdentificacionDTO> dtoList = new ArrayList<>();
+	public List<TipoIdentificacionResponse> findAll() {
+		List<TipoIdentificacionResponse> dtoList = new ArrayList<>();
 		Iterable<TipoIdentificacion> tipos = tipoIdentificacionDao.findAll();
 		for(TipoIdentificacion tipoIdentificacion : tipos) {
-			TipoIdentificacionDTO tipoIdentificacionDto = modelMapper.map(tipoIdentificacion, TipoIdentificacionDTO.class);
+			TipoIdentificacionResponse tipoIdentificacionDto = modelMapper.map(tipoIdentificacion, TipoIdentificacionResponse.class);
 			dtoList.add(tipoIdentificacionDto);	
 		}
 		return dtoList;

@@ -2,11 +2,11 @@ package com.transtour.backend.models.services;
 
 import java.util.List;
 
-import com.transtour.backend.models.dto.RolDTO;
+import com.transtour.backend.models.dto.response.RolResponse;
 
 public interface IRolService {
 
-	public RolDTO save(RolDTO rolDto);
+	public RolResponse save(RolResponse rolDto);
 	
-	public List<RolDTO> findAll();
+	public List<RolResponse> findAll();
 }

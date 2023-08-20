@@ -1,10 +1,19 @@
 package com.transtour.backend.auth;
 
+import java.util.Arrays;
+
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableResourceServer
@@ -19,31 +28,32 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         http
         	.authorizeRequests(authorizeRequests -> 
         		authorizeRequests
-        			.antMatchers(HttpMethod.GET, 
-        					"/v1/destinos", 
-        					"/v1/itinerarios/{fechaEmbarque}/{nombreDestino}").permitAll()
-        			.antMatchers(HttpMethod.GET, "/v1/destinos/page/**").hasRole(SUPERADMINISTRADOR)
-        			.antMatchers(HttpMethod.POST, "/v1/destinos").hasRole(SUPERADMINISTRADOR)
-        			.antMatchers(HttpMethod.PUT, "/v1/destinos/{id}").hasRole(SUPERADMINISTRADOR)
-        			.antMatchers(HttpMethod.DELETE, "/v1/destinos/{id}").hasRole(SUPERADMINISTRADOR)
-        			.antMatchers(HttpMethod.GET, "/v1/embarcaciones").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.GET, "/v1/embarcaciones/page/**").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.POST, "/v1/embarcaciones").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.PUT, "/v1/embarcaciones/{id}").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.DELETE, "/v1/embarcaciones/{id}").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.GET, "/v1/empresas/{nit}").hasRole(SUPERADMINISTRADOR)
-        			.antMatchers(HttpMethod.GET, "/v1/empresas/page/**").hasRole(SUPERADMINISTRADOR)
-        			.antMatchers(HttpMethod.POST, "/v1/empresas").hasRole(SUPERADMINISTRADOR)
-        			.antMatchers(HttpMethod.PUT, "/v1/empresas/{id}").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.DELETE, "/v1/empresas/{id}").hasRole(SUPERADMINISTRADOR)
-        			.antMatchers(HttpMethod.POST, "/v1/empresas/upload").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.GET, "/v1//empresas/uploads/img/{nombreFoto:.+}").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.GET, "/v1/itinerarios").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.GET, "/v1/itinerarios/page/**").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.POST, "/v1/itinerarios").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.PUT, "/v1/itinerarios/{id}").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			.antMatchers(HttpMethod.DELETE, "/v1/itinerarios/{id}").hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+        			.antMatchers(HttpMethod.GET, "/v1/empresas", "/v1/empresas/{id}").permitAll()
+        			.antMatchers(HttpMethod.POST, "/v1/empresas").permitAll()
+        			.antMatchers(HttpMethod.PUT, "/v1/empresas/{id}").permitAll()
+        			.antMatchers(HttpMethod.DELETE, "/v1/empresas/{id}").permitAll()
         			.anyRequest().authenticated()
 			);
+	}
+	
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		config.setAllowCredentials(true);
+		config.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return source;
+	}
+
+	@Bean
+	FilterRegistrationBean<CorsFilter> corsFilter() {
+		FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(
+				new CorsFilter(corsConfigurationSource()));
+		bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+		return bean;
 	}
 }

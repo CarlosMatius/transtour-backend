@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IDestinoDao;
-import com.transtour.backend.models.dto.DestinoDTO;
+import com.transtour.backend.models.dto.response.DestinoResponse;
 import com.transtour.backend.models.entity.Destino;
 import com.transtour.backend.models.services.IDestinoService;
 
@@ -26,25 +26,25 @@ public class DestinoServiceImpl implements IDestinoService{
 
 	@Override
 	@Transactional
-	public DestinoDTO save(DestinoDTO destinoDto) {
+	public DestinoResponse save(DestinoResponse destinoDto) {
 		Destino destino = modelMapper.map(destinoDto, Destino.class);
 		destino = destinoDao.save(destino);
-		return modelMapper.map(destino, DestinoDTO.class);
+		return modelMapper.map(destino, DestinoResponse.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public DestinoDTO findById(Long id) {
-		return modelMapper.map(destinoDao.findById(id), DestinoDTO.class);
+	public DestinoResponse findById(Long id) {
+		return modelMapper.map(destinoDao.findById(id), DestinoResponse.class);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<DestinoDTO> findAll() {
-		List<DestinoDTO> dtoList = new ArrayList<>();
+	public List<DestinoResponse> findAll() {
+		List<DestinoResponse> dtoList = new ArrayList<>();
 		Iterable<Destino> destinos = destinoDao.findAll();
 		for(Destino destino : destinos) {
-			DestinoDTO destinoDto = modelMapper.map(destino, DestinoDTO.class);
+			DestinoResponse destinoDto = modelMapper.map(destino, DestinoResponse.class);
 			dtoList.add(destinoDto);	
 		}
 		return dtoList;
@@ -52,9 +52,9 @@ public class DestinoServiceImpl implements IDestinoService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<DestinoDTO> findAll(Pageable page) {
+	public Page<DestinoResponse> findAll(Pageable page) {
 		Page<Destino> paginaDestinos = destinoDao.findAll(page);
-		return paginaDestinos.map(destino -> modelMapper.map(destino, DestinoDTO.class));
+		return paginaDestinos.map(destino -> modelMapper.map(destino, DestinoResponse.class));
 	}
 	
 	@Override

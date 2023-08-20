@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IEmbarcacionDao;
-import com.transtour.backend.models.dto.EmbarcacionDTO;
+import com.transtour.backend.models.dto.response.EmbarcacionResponse;
 import com.transtour.backend.models.entity.Embarcacion;
 import com.transtour.backend.models.services.IEmbarcacionService;
 
@@ -26,25 +26,25 @@ public class EmbarcacionServiceImpl implements IEmbarcacionService{
 
 	@Override
 	@Transactional
-	public EmbarcacionDTO save(EmbarcacionDTO embarcacionDto) {
+	public EmbarcacionResponse save(EmbarcacionResponse embarcacionDto) {
 		Embarcacion embarcacion = modelMapper.map(embarcacionDto, Embarcacion.class);
 		embarcacion = embarcacionDao.save(embarcacion);
-		return modelMapper.map(embarcacion, EmbarcacionDTO.class);
+		return modelMapper.map(embarcacion, EmbarcacionResponse.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public EmbarcacionDTO findById(Long id) {
-		return modelMapper.map(embarcacionDao.findById(id), EmbarcacionDTO.class);
+	public EmbarcacionResponse findById(Long id) {
+		return modelMapper.map(embarcacionDao.findById(id), EmbarcacionResponse.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<EmbarcacionDTO> findAll() {
-		List<EmbarcacionDTO> dtoList = new ArrayList<>();
+	public List<EmbarcacionResponse> findAll() {
+		List<EmbarcacionResponse> dtoList = new ArrayList<>();
 		Iterable<Embarcacion> embarcaciones = embarcacionDao.findAll();
 		for(Embarcacion embarcacion : embarcaciones) {
-			EmbarcacionDTO destinoDto = modelMapper.map(embarcacion, EmbarcacionDTO.class);
+			EmbarcacionResponse destinoDto = modelMapper.map(embarcacion, EmbarcacionResponse.class);
 			dtoList.add(destinoDto);	
 		}
 		return dtoList;
@@ -52,9 +52,9 @@ public class EmbarcacionServiceImpl implements IEmbarcacionService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<EmbarcacionDTO> findAll(Pageable page) {
+	public Page<EmbarcacionResponse> findAll(Pageable page) {
 		Page<Embarcacion> paginaEmbarcaciones = embarcacionDao.findAll(page);
-		return paginaEmbarcaciones.map(embarcacion -> modelMapper.map(embarcacion, EmbarcacionDTO.class));
+		return paginaEmbarcaciones.map(embarcacion -> modelMapper.map(embarcacion, EmbarcacionResponse.class));
 	}
 
 	@Override

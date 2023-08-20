@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.transtour.backend.models.dto.UsuarioDTO;
-import com.transtour.backend.models.dto.UsuarioResponse;
+import com.transtour.backend.models.dto.response.UsuarioResponse;
 import com.transtour.backend.models.services.IUsuarioService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})

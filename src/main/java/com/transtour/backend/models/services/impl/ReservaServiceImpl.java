@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IReservaDao;
-import com.transtour.backend.models.dto.ReservaDTO;
+import com.transtour.backend.models.dto.response.ReservaResponse;
 import com.transtour.backend.models.entity.Reserva;
 import com.transtour.backend.models.services.IReservaService;
 
@@ -26,31 +26,31 @@ public class ReservaServiceImpl implements IReservaService{
 
 	@Override
 	@Transactional
-	public ReservaDTO save(ReservaDTO reservaDto) {
+	public ReservaResponse save(ReservaResponse reservaDto) {
 		Reserva reserva = modelMapper.map(reservaDto, Reserva.class);
 		reserva = reservaDao.save(reserva);
-		return modelMapper.map(reserva, ReservaDTO.class);
+		return modelMapper.map(reserva, ReservaResponse.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public ReservaDTO findById(Long id) {
-		return modelMapper.map(reservaDao.findById(id), ReservaDTO.class);
+	public ReservaResponse findById(Long id) {
+		return modelMapper.map(reservaDao.findById(id), ReservaResponse.class);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public ReservaDTO findByCodigoReserva(String codigoReserva) {
-		return modelMapper.map(reservaDao.findByCodigoReserva(codigoReserva), ReservaDTO.class);
+	public ReservaResponse findByCodigoReserva(String codigoReserva) {
+		return modelMapper.map(reservaDao.findByCodigoReserva(codigoReserva), ReservaResponse.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ReservaDTO> findAll() {
-		List<ReservaDTO> dtoList = new ArrayList<>();
+	public List<ReservaResponse> findAll() {
+		List<ReservaResponse> dtoList = new ArrayList<>();
 		Iterable<Reserva> reservas = reservaDao.findAll();
 		for(Reserva reserva : reservas) {
-			ReservaDTO reservaDto = modelMapper.map(reserva, ReservaDTO.class);
+			ReservaResponse reservaDto = modelMapper.map(reserva, ReservaResponse.class);
 			dtoList.add(reservaDto);	
 		}
 		return dtoList;
@@ -58,9 +58,9 @@ public class ReservaServiceImpl implements IReservaService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<ReservaDTO> findAll(Pageable page) {
+	public Page<ReservaResponse> findAll(Pageable page) {
 		Page<Reserva> paginaReservas = reservaDao.findAll(page);
-		return paginaReservas.map(reserva -> modelMapper.map(reserva, ReservaDTO.class));
+		return paginaReservas.map(reserva -> modelMapper.map(reserva, ReservaResponse.class));
 	}
 
 	@Override

@@ -2,15 +2,15 @@ package com.transtour.backend.models.services;
 
 import java.util.List;
 
-import com.transtour.backend.models.dto.TipoIdentificacionDTO;
+import com.transtour.backend.models.dto.response.TipoIdentificacionResponse;
 
 public interface ITipoIdentificacionService {
 
-	public TipoIdentificacionDTO save(TipoIdentificacionDTO tipoIdentificacionDto);
+	public TipoIdentificacionResponse save(TipoIdentificacionResponse tipoIdentificacionDto);
 	
-	public TipoIdentificacionDTO findById(Long id);
+	public TipoIdentificacionResponse findById(Long id);
 	
-	public List<TipoIdentificacionDTO> findAll();
+	public List<TipoIdentificacionResponse> findAll();
 	
 	public void delete(Long id);
 }

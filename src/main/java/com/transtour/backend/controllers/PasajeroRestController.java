@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.PasajeroDTO;
+import com.transtour.backend.models.dto.response.PasajeroResponse;
 import com.transtour.backend.models.services.IPasajeroService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -35,9 +35,9 @@ public class PasajeroRestController {
 	private IPasajeroService pasajeroService;
 
 	@PostMapping("/pasajeros")
-	public ResponseEntity<Object> create(@Valid @RequestBody PasajeroDTO pasajeroDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody PasajeroResponse pasajeroDTO, BindingResult result) {
 		
-		PasajeroDTO pasajeroNew;
+		PasajeroResponse pasajeroNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {
@@ -67,9 +67,9 @@ public class PasajeroRestController {
 	}
 	
 	@PutMapping("/pasajeros/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody PasajeroDTO pasajeroDTO, BindingResult result, @PathVariable Long id) {
-		PasajeroDTO pasajeroActual = pasajeroService.findById(id);
-		PasajeroDTO pasajeroActualizado;
+	public ResponseEntity<Object> update(@Valid @RequestBody PasajeroResponse pasajeroDTO, BindingResult result, @PathVariable Long id) {
+		PasajeroResponse pasajeroActual = pasajeroService.findById(id);
+		PasajeroResponse pasajeroActualizado;
 		
 		Map<String, Object> response = new HashMap<>();
 

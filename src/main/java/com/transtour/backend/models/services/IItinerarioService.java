@@ -6,19 +6,19 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.transtour.backend.models.dto.ItinerarioDTO;
+import com.transtour.backend.models.dto.response.ItinerarioResponse;
 
 public interface IItinerarioService {
 
-	public ItinerarioDTO save(ItinerarioDTO itinerarioDTO);
+	public ItinerarioResponse save(ItinerarioResponse itinerarioDTO);
 	
-	public ItinerarioDTO findById(Long id);
+	public ItinerarioResponse findById(Long id);
 	
-	public List<ItinerarioDTO> findByFechaAndDestino(LocalDate fechaEmbarque, String nombreDestino);
+	public List<ItinerarioResponse> findByFechaAndDestino(LocalDate fechaEmbarque, String nombreDestino);
 	
-	public List<ItinerarioDTO> findAll();
+	public List<ItinerarioResponse> findAll();
 	
-	public Page<ItinerarioDTO> findAll(Pageable page);
+	public Page<ItinerarioResponse> findAll(Pageable page);
 	
 	public void delete(Long id);
 }

@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.EmbarcacionDTO;
-import com.transtour.backend.models.dto.ItinerarioDTO;
+import com.transtour.backend.models.dto.response.EmbarcacionResponse;
+import com.transtour.backend.models.dto.response.ItinerarioResponse;
 import com.transtour.backend.models.services.IEmbarcacionService;
 import com.transtour.backend.models.services.IItinerarioService;
 
@@ -47,12 +47,12 @@ public class ItinerarioRestController {
 	private IEmbarcacionService embarcacionService;
 
 	@GetMapping("/itinerarios")
-	public List<ItinerarioDTO> index() {
+	public List<ItinerarioResponse> index() {
 		return itinerarioService.findAll();
 	}
 	
 	@GetMapping("/itinerarios/page/{page}")
-	public Page<ItinerarioDTO> page(@PathVariable Integer page) {
+	public Page<ItinerarioResponse> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return itinerarioService.findAll(pageable);
 	}
@@ -60,7 +60,7 @@ public class ItinerarioRestController {
 	@GetMapping("/itinerarios/{fechaEmbarque}/{nombreDestino}")
 	public ResponseEntity<Object> findByItinerario(@PathVariable String fechaEmbarque, @PathVariable String nombreDestino) {
 		
-		List<ItinerarioDTO> itinerariosDTO;
+		List<ItinerarioResponse> itinerariosDTO;
 		Map<String, Object> response = new HashMap<>();
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate fecha = LocalDate.parse(fechaEmbarque, formato);
@@ -81,10 +81,10 @@ public class ItinerarioRestController {
 	}
 	
 	@PostMapping("/itinerarios")
-	public ResponseEntity<Object> create(@Valid @RequestBody ItinerarioDTO itinerarioDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody ItinerarioResponse itinerarioDTO, BindingResult result) {
 		
-		EmbarcacionDTO embarcacion;
-		ItinerarioDTO itinerarioNew;
+		EmbarcacionResponse embarcacion;
+		ItinerarioResponse itinerarioNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {
@@ -115,9 +115,9 @@ public class ItinerarioRestController {
 	}
 
 	@PutMapping("/itinerarios/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody ItinerarioDTO itinerarioDTO, BindingResult result, @PathVariable Long id) {
-		ItinerarioDTO itinerarioActual = itinerarioService.findById(id);
-		ItinerarioDTO itinerarioActualizado;
+	public ResponseEntity<Object> update(@Valid @RequestBody ItinerarioResponse itinerarioDTO, BindingResult result, @PathVariable Long id) {
+		ItinerarioResponse itinerarioActual = itinerarioService.findById(id);
+		ItinerarioResponse itinerarioActualizado;
 		
 		Map<String, Object> response = new HashMap<>();
 

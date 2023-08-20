@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Component;
 
-import com.transtour.backend.models.dto.UsuarioResponse;
+import com.transtour.backend.models.dto.response.UsuarioResponse;
 import com.transtour.backend.models.services.IUsuarioService;
 
 @Component
@@ -27,8 +27,8 @@ public class InfoAdditionalToken implements TokenEnhancer{
 		Map<String, Object> info = new HashMap<>();
 		info.put("info aditional", "Hola que tal " + usuario.getNombre() + " " + usuario.getApellido());
 		info.put("usuario Id", usuario.getId());
-		//info.put("empresa Id", usuario.getEmpresa().getId());
-		//info.put("nombre empresa", usuario.getEmpresa().getNombre());
+		info.put("empresa Id", usuario.getEmpresa().getId() !=null ? usuario.getEmpresa().getId(): "");
+		info.put("nombre empresa", usuario.getEmpresa().getNombre() !=null ? usuario.getEmpresa().getId(): "");
 		
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
 		

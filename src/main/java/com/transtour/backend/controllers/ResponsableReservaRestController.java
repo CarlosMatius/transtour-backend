@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.ResponsableReservaDTO;
+import com.transtour.backend.models.dto.response.ResponsableReservaResponse;
 import com.transtour.backend.models.services.IResponsableReservaService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -33,9 +33,9 @@ public class ResponsableReservaRestController {
 	private IResponsableReservaService responsableService;
 	
 	@PostMapping("/responsables")
-public ResponseEntity<Object> create(@Valid @RequestBody ResponsableReservaDTO responsableDTO, BindingResult result) {
+public ResponseEntity<Object> create(@Valid @RequestBody ResponsableReservaResponse responsableDTO, BindingResult result) {
 		
-		ResponsableReservaDTO responsableNew;
+		ResponsableReservaResponse responsableNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {

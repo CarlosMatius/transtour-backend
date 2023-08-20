@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.EmbarcacionDTO;
+import com.transtour.backend.models.dto.response.EmbarcacionResponse;
 import com.transtour.backend.models.services.IEmbarcacionService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -40,20 +40,20 @@ public class EmbarcacionRestController {
 	private IEmbarcacionService embarcacionService;
 
 	@GetMapping("/embarcaciones")
-	public List<EmbarcacionDTO> index() {
+	public List<EmbarcacionResponse> index() {
 		return embarcacionService.findAll();
 	}
 	
 	@GetMapping("/embarcaciones/page/{page}")
-	public Page<EmbarcacionDTO> page(@PathVariable Integer page) {
+	public Page<EmbarcacionResponse> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return embarcacionService.findAll(pageable);
 	}
 	
 	@PostMapping("/embarcaciones")
-	public ResponseEntity<Object> create(@Valid @RequestBody EmbarcacionDTO embarcacionDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody EmbarcacionResponse embarcacionDTO, BindingResult result) {
 		
-		EmbarcacionDTO embarcacionNew;
+		EmbarcacionResponse embarcacionNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {
@@ -83,9 +83,9 @@ public class EmbarcacionRestController {
 	}
 	
 	@PutMapping("/embarcaciones/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody EmbarcacionDTO embarcacionDto, BindingResult result, @PathVariable Long id) {
-		EmbarcacionDTO embarcacionActual = embarcacionService.findById(id);
-		EmbarcacionDTO embarcacionActualizada;
+	public ResponseEntity<Object> update(@Valid @RequestBody EmbarcacionResponse embarcacionDto, BindingResult result, @PathVariable Long id) {
+		EmbarcacionResponse embarcacionActual = embarcacionService.findById(id);
+		EmbarcacionResponse embarcacionActualizada;
 		
 		Map<String, Object> response = new HashMap<>();
 

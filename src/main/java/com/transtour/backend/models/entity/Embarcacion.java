@@ -26,10 +26,13 @@ public class Embarcacion implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	@Column(nullable = false, length = 45)
 	private String nombre;
+	
 	@Column(nullable = false)
 	private int capacidad;
+	
 	private boolean enabled;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -5,19 +5,19 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.transtour.backend.models.dto.ReservaDTO;
+import com.transtour.backend.models.dto.response.ReservaResponse;
 
 public interface IReservaService {
 
-	public ReservaDTO save(ReservaDTO reservaDto);
+	public ReservaResponse save(ReservaResponse reservaDto);
 	
-	public ReservaDTO findById(Long id);
+	public ReservaResponse findById(Long id);
 	
-	public ReservaDTO findByCodigoReserva(String codigoReserva);
+	public ReservaResponse findByCodigoReserva(String codigoReserva);
 	
-	public List<ReservaDTO> findAll();
+	public List<ReservaResponse> findAll();
 	
-	public Page<ReservaDTO> findAll(Pageable page);
+	public Page<ReservaResponse> findAll(Pageable page);
 	
 	public void delete(Long id);
 }

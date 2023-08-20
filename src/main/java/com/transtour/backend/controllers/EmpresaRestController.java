@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.transtour.backend.models.dto.EmpresaDTO;
+import com.transtour.backend.models.dto.response.EmpresaResponse;
 import com.transtour.backend.models.services.IEmpresaService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -57,25 +57,64 @@ public class EmpresaRestController {
 	private IEmpresaService empresaService;
 
 	@GetMapping("/empresas")
-	public List<EmpresaDTO> index() {
+	public List<EmpresaResponse> index() {
 		return empresaService.findAll();
 	}
 	
-	@GetMapping("/empresas/{nit}")
-	public EmpresaDTO show(@PathVariable String nit) {
-		return empresaService.findByNit(nit);
+	@GetMapping("/empresas/by/{nit}")
+	public ResponseEntity<Object> show(@PathVariable String nit) {
+		
+		EmpresaResponse empresa;
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			empresa = empresaService.findByNit(nit);
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "Error al realizar la consulta en la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		if(empresa == null) {
+			response.put(MESSAGE, "Error: la empresa con Nit: " + nit + " No existe");
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(empresa, HttpStatus.OK);
+	}
+	
+	@GetMapping("/empresas/{id}")
+	public ResponseEntity<Object> showId(@PathVariable Long id) {
+		
+		EmpresaResponse empresa;
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			empresa = empresaService.findById(id);
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "Error al realizar la consulta en la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		if(empresa == null) {
+			response.put(MESSAGE, "Error: la empresa con Id: " + id + " No existe en el sistema");
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(empresa, HttpStatus.OK);
 	}
 	
 	@GetMapping("/empresas/page/{page}")
-	public Page<EmpresaDTO> page(@PathVariable Integer page) {
+	public Page<EmpresaResponse> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return empresaService.findAll(pageable);
 	}
 	
 	@PostMapping("/empresas")
-	public ResponseEntity<Object> create(@Valid @RequestBody EmpresaDTO empresaDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody EmpresaResponse empresaDTO, BindingResult result) {
 		
-		EmpresaDTO empresaNew;
+		EmpresaResponse empresaNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {
@@ -105,10 +144,10 @@ public class EmpresaRestController {
 	}
 
 	@PutMapping("/empresas/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody EmpresaDTO empresaDto, BindingResult result, @PathVariable Long id) {
+	public ResponseEntity<Object> update(@Valid @RequestBody EmpresaResponse empresaDto, BindingResult result, @PathVariable Long id) {
 		
-		EmpresaDTO empresaActual = empresaService.findById(id);
-		EmpresaDTO empresaActualizada;
+		EmpresaResponse empresaActual = empresaService.findById(id);
+		EmpresaResponse empresaActualizada;
 		
 		Map<String, Object> response = new HashMap<>();
 
@@ -123,7 +162,7 @@ public class EmpresaRestController {
 		}
 		
 		if(empresaActual == null) {
-			response.put(MESSAGE, "Error: la empresa con ID: " + id + " No existe en el sistema");
+			response.put(MESSAGE, "La empresa con ID: " + id + " No existe en el sistema");
 			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 		
@@ -154,7 +193,7 @@ public class EmpresaRestController {
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			EmpresaDTO empresaDTO = empresaService.findById(id);
+			EmpresaResponse empresaDTO = empresaService.findById(id);
 			String nombreFotoAnterior = empresaDTO.getImagen();
 			
 			if(nombreFotoAnterior !=null && nombreFotoAnterior.length() > 0) {
@@ -180,7 +219,7 @@ public class EmpresaRestController {
 	public ResponseEntity<Object> upload(@RequestParam("archivo") MultipartFile archivo, @RequestParam("archivo") Long id) {
 		Map<String, Object> response = new HashMap<>();
 		
-		EmpresaDTO empresaDTO = empresaService.findById(id);
+		EmpresaResponse empresaDTO = empresaService.findById(id);
 		String ruta = archivo.getOriginalFilename();
 		
 		if(!archivo.isEmpty() && ruta !=null) {

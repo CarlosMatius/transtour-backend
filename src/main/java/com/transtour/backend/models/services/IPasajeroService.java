@@ -1,10 +1,10 @@
 package com.transtour.backend.models.services;
 
-import com.transtour.backend.models.dto.PasajeroDTO;
+import com.transtour.backend.models.dto.response.PasajeroResponse;
 
 public interface IPasajeroService {
 
-	public PasajeroDTO save(PasajeroDTO pasajeroDto);
+	public PasajeroResponse save(PasajeroResponse pasajeroDto);
 	
-	public PasajeroDTO findById(Long id);
+	public PasajeroResponse findById(Long id);
 }

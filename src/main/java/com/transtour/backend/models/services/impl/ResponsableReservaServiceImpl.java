@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IResponsableReservaDao;
-import com.transtour.backend.models.dto.ResponsableReservaDTO;
+import com.transtour.backend.models.dto.response.ResponsableReservaResponse;
 import com.transtour.backend.models.entity.ResponsableReserva;
 import com.transtour.backend.models.services.IResponsableReservaService;
 
@@ -21,10 +21,10 @@ public class ResponsableReservaServiceImpl implements IResponsableReservaService
 	
 	@Override
 	@Transactional
-	public ResponsableReservaDTO save(ResponsableReservaDTO responsableReservaDto) {
+	public ResponsableReservaResponse save(ResponsableReservaResponse responsableReservaDto) {
 		ResponsableReserva responsable = modelMapper.map(responsableReservaDto, ResponsableReserva.class);
 		responsable = responsableDao.save(responsable);
-		return modelMapper.map(responsable, ResponsableReservaDTO.class);
+		return modelMapper.map(responsable, ResponsableReservaResponse.class);
 	}
 
 }
