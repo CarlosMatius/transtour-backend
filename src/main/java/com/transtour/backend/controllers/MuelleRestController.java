@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.response.MuelleResponse;
+import com.transtour.backend.models.dto.MuelleDTO;
 import com.transtour.backend.models.services.IMuelleService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -37,14 +37,14 @@ public class MuelleRestController {
 	private IMuelleService muelleService;
 
 	@GetMapping("/muelles")
-	public List<MuelleResponse> index() {
+	public List<MuelleDTO> index() {
 		return muelleService.findAll();
 	}
 	
 	@PostMapping("/muelles")
-	public ResponseEntity<Object> create(@Valid @RequestBody MuelleResponse muelleDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody MuelleDTO muelleDTO, BindingResult result) {
 		
-		MuelleResponse muelleNew;
+		MuelleDTO muelleNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {
@@ -72,9 +72,9 @@ public class MuelleRestController {
 	}
 	
 	@PutMapping("/muelles/{id}")
-	public ResponseEntity<Object>  update(@Valid @RequestBody MuelleResponse muelleDTO, BindingResult result, @PathVariable Long id) {
-		MuelleResponse muelleActual = muelleService.findById(id);
-		MuelleResponse muelleActualizado;
+	public ResponseEntity<Object>  update(@Valid @RequestBody MuelleDTO muelleDTO, BindingResult result, @PathVariable Long id) {
+		MuelleDTO muelleActual = muelleService.findById(id);
+		MuelleDTO muelleActualizado;
 		
 		Map<String, Object> response = new HashMap<>();
 

@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.response.EmbarcacionResponse;
-import com.transtour.backend.models.dto.response.ItinerarioResponse;
+import com.transtour.backend.models.dto.EmbarcacionDTO;
+import com.transtour.backend.models.dto.ItinerarioDTO;
 import com.transtour.backend.models.services.IEmbarcacionService;
 import com.transtour.backend.models.services.IItinerarioService;
 
@@ -47,12 +47,12 @@ public class ItinerarioRestController {
 	private IEmbarcacionService embarcacionService;
 
 	@GetMapping("/itinerarios")
-	public List<ItinerarioResponse> index() {
+	public List<ItinerarioDTO> index() {
 		return itinerarioService.findAll();
 	}
 	
 	@GetMapping("/itinerarios/page/{page}")
-	public Page<ItinerarioResponse> page(@PathVariable Integer page) {
+	public Page<ItinerarioDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return itinerarioService.findAll(pageable);
 	}
@@ -60,7 +60,7 @@ public class ItinerarioRestController {
 	@GetMapping("/itinerarios/{fechaEmbarque}/{nombreDestino}")
 	public ResponseEntity<Object> findByItinerario(@PathVariable String fechaEmbarque, @PathVariable String nombreDestino) {
 		
-		List<ItinerarioResponse> itinerariosDTO;
+		List<ItinerarioDTO> itinerariosDTO;
 		Map<String, Object> response = new HashMap<>();
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate fecha = LocalDate.parse(fechaEmbarque, formato);
@@ -81,10 +81,10 @@ public class ItinerarioRestController {
 	}
 	
 	@PostMapping("/itinerarios")
-	public ResponseEntity<Object> create(@Valid @RequestBody ItinerarioResponse itinerarioDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody ItinerarioDTO itinerarioRequest, BindingResult result) {
 		
-		EmbarcacionResponse embarcacion;
-		ItinerarioResponse itinerarioNew;
+		EmbarcacionDTO embarcacion;
+		ItinerarioDTO itinerarioNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {
@@ -98,9 +98,9 @@ public class ItinerarioRestController {
 		}
 		
 		try {
-			embarcacion = embarcacionService.findById(itinerarioDTO.getEmbarcacion().getId());
-			itinerarioDTO.setCupos(embarcacion.getCapacidad());
-			itinerarioNew = itinerarioService.save(itinerarioDTO);
+			embarcacion = embarcacionService.findById(itinerarioRequest.getEmbarcacion().getId());
+			itinerarioRequest.setCupos(embarcacion.getCapacidad());
+			itinerarioNew = itinerarioService.save(itinerarioRequest);
 			
 		} catch (DataAccessException e) {
 			response.put(MESSAGE, "No se pudo registrar el itinerario en la base de datos");
@@ -115,9 +115,9 @@ public class ItinerarioRestController {
 	}
 
 	@PutMapping("/itinerarios/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody ItinerarioResponse itinerarioDTO, BindingResult result, @PathVariable Long id) {
-		ItinerarioResponse itinerarioActual = itinerarioService.findById(id);
-		ItinerarioResponse itinerarioActualizado;
+	public ResponseEntity<Object> update(@Valid @RequestBody ItinerarioDTO itinerarioRequest, BindingResult result, @PathVariable Long id) {
+		ItinerarioDTO itinerarioActual = itinerarioService.findById(id);
+		ItinerarioDTO itinerarioActualizado;
 		
 		Map<String, Object> response = new HashMap<>();
 
@@ -137,13 +137,13 @@ public class ItinerarioRestController {
 		}
 		
 		try {
-			itinerarioActual.setFechaEmbarque(itinerarioDTO.getFechaEmbarque());
-			itinerarioActual.setHoraSalida(itinerarioDTO.getHoraSalida());
-			itinerarioActual.setHoraRegreso(itinerarioDTO.getHoraRegreso());
-			itinerarioActual.setPrecio(itinerarioDTO.getPrecio());
-			itinerarioActual.setEmbarcacion(itinerarioDTO.getEmbarcacion());
-			itinerarioActual.setDestino(itinerarioDTO.getDestino());
-			itinerarioActual.setMuelle(itinerarioDTO.getMuelle());
+			itinerarioActual.setFechaEmbarque(itinerarioRequest.getFechaEmbarque());
+			itinerarioActual.setHoraSalida(itinerarioRequest.getHoraSalida());
+			itinerarioActual.setHoraRegreso(itinerarioRequest.getHoraRegreso());
+			itinerarioActual.setPrecio(itinerarioRequest.getPrecio());
+			itinerarioActual.setEmbarcacion(itinerarioRequest.getEmbarcacion());
+			itinerarioActual.setDestino(itinerarioRequest.getDestino());
+			itinerarioActual.setMuelle(itinerarioRequest.getMuelle());
 			
 			itinerarioActualizado = itinerarioService.save(itinerarioActual);
 		} catch (DataAccessException e) {

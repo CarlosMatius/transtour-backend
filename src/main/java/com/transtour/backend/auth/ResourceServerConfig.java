@@ -28,8 +28,31 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         http
         	.authorizeRequests(authorizeRequests -> 
         		authorizeRequests
-        			.antMatchers(HttpMethod.GET, "/v1/empresas", "/v1/empresas/{id}").permitAll()
-        			.antMatchers(HttpMethod.POST, "/v1/empresas").permitAll()
+        			.antMatchers(HttpMethod.GET, "/v1/empresas", "/v1/empresas/{id}", "/v1/usuarios", "/v1/usuarios/{id}").permitAll()
+        			
+        			.antMatchers(HttpMethod.GET,
+        					"/v1/usuarios",
+        					"/v1/usuarios/{id}",
+        					"/v1/usuarios/by/{identificacion}",
+        					"/v1/usuarios/page/**"
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+        			
+        			.antMatchers(HttpMethod.POST, 
+        					"/v1/usuarios"
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+        			
+        			.antMatchers(HttpMethod.PUT, 
+        					"/v1/usuarios/{id}"
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+        			
+        			.antMatchers(HttpMethod.DELETE, 
+        					"/v1/usuarios/{id}"
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+        			
+        			
+        			
+        			
+        			.antMatchers(HttpMethod.POST, "/v1/destinos").permitAll()
         			.antMatchers(HttpMethod.PUT, "/v1/empresas/{id}").permitAll()
         			.antMatchers(HttpMethod.DELETE, "/v1/empresas/{id}").permitAll()
         			.anyRequest().authenticated()

@@ -5,17 +5,17 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.transtour.backend.models.dto.response.EmbarcacionResponse;
+import com.transtour.backend.models.dto.EmbarcacionDTO;
 
 public interface IEmbarcacionService {
 
-	public EmbarcacionResponse save(EmbarcacionResponse embarcacionDto);
+	public EmbarcacionDTO save(EmbarcacionDTO embarcacionDTO);
 	
-	public EmbarcacionResponse findById(Long id);
+	public EmbarcacionDTO findById(Long id);
 	
-	public List<EmbarcacionResponse> findAll();
+	public List<EmbarcacionDTO> findAll();
 	
-	public Page<EmbarcacionResponse> findAll(Pageable page);
+	public Page<EmbarcacionDTO> findAll(Pageable page);
 	
 	public void delete(Long id);
 }

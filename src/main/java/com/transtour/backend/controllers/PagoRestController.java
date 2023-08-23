@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.response.PagoResponse;
+import com.transtour.backend.models.dto.PagoDTO;
 import com.transtour.backend.models.services.IPagoService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -38,12 +38,12 @@ public class PagoRestController {
 	private IPagoService pagoservice;
 
 	@GetMapping("/pagos")
-	public List<PagoResponse> index() {
+	public List<PagoDTO> index() {
 		return pagoservice.findAll();
 	}
 	
 	@GetMapping("/pagos/page/{page}")
-	public Page<PagoResponse> page(@PathVariable Integer page) {
+	public Page<PagoDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return pagoservice.findAll(pageable);
 	}
@@ -51,7 +51,7 @@ public class PagoRestController {
 	@GetMapping("/pagos/{numeroRecibo}")
 	public ResponseEntity<Object> show(@PathVariable String numeroRecibo) {
 		
-		PagoResponse pagoDTO;
+		PagoDTO pagoDTO;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
@@ -72,9 +72,9 @@ public class PagoRestController {
 	}
 	
 	@PostMapping("/pagos")
-	public ResponseEntity<Object> create(@Valid @RequestBody PagoResponse pagoDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody PagoDTO pagoDTO, BindingResult result) {
 		
-		PagoResponse pagoNew;
+		PagoDTO pagoNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {

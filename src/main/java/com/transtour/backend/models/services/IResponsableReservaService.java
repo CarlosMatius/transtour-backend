@@ -1,8 +1,8 @@
 package com.transtour.backend.models.services;
 
-import com.transtour.backend.models.dto.response.ResponsableReservaResponse;
+import com.transtour.backend.models.dto.ResponsableReservaDTO;
 
 public interface IResponsableReservaService {
 
-	public ResponsableReservaResponse save(ResponsableReservaResponse responsableReservaDto);
+	public ResponsableReservaDTO save(ResponsableReservaDTO responsableReservaDTO);
 }

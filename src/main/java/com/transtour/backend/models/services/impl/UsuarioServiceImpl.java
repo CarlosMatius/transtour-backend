@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IUsuarioDao;
 import com.transtour.backend.models.dto.UsuarioDTO;
-import com.transtour.backend.models.dto.response.UsuarioResponse;
+import com.transtour.backend.models.entity.Empresa;
 import com.transtour.backend.models.entity.Usuario;
 import com.transtour.backend.models.services.IUsuarioService;
 
@@ -38,8 +38,8 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService{
 
 	@Override
 	@Transactional
-	public UsuarioDTO save(UsuarioDTO usuarioDto) {
-		Usuario usuario = modelMapper.map(usuarioDto, Usuario.class);
+	public UsuarioDTO save(UsuarioDTO usuarioDTO) {
+		Usuario usuario = modelMapper.map(usuarioDTO, Usuario.class);
 		usuario = usuarioDao.save(usuario);
 		return modelMapper.map(usuario, UsuarioDTO.class);
 	}
@@ -49,42 +49,80 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService{
 	public UsuarioDTO findById(Long id) {
 		return modelMapper.map(usuarioDao.findById(id), UsuarioDTO.class);
 	}
-
+	
 	@Override
 	@Transactional(readOnly = true)
-	public UsuarioResponse findByIdentificacion(String identificacion) {
-		return modelMapper.map(usuarioDao.findByIdentificacion(identificacion), UsuarioResponse.class);
+	public UsuarioDTO findByIdAndEmpresa(Long id, Empresa empresa) {
+		return modelMapper.map(usuarioDao.findByIdAndEmpresa(id, empresa), UsuarioDTO.class);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public UsuarioResponse findByUsername(String user) {
-		return modelMapper.map(usuarioDao.findByUsername(user), UsuarioResponse.class);
+	public UsuarioDTO findByUsername(String user) {
+		return modelMapper.map(usuarioDao.findByUsername(user), UsuarioDTO.class);
 	}
-
+	
 	@Override
 	@Transactional(readOnly = true)
-	public List<UsuarioResponse> findAll() {
-		List<UsuarioResponse> dtoList = new ArrayList<>();
+	public UsuarioDTO findByIdentificacion(String identificacion) {
+		return modelMapper.map(usuarioDao.findByIdentificacion(identificacion), UsuarioDTO.class);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public UsuarioDTO findByIdentificacionAndEmpresa(String identificacion, Empresa empresa) {
+		return modelMapper.map(usuarioDao.findByIdentificacionAndEmpresa(identificacion, empresa), UsuarioDTO.class);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<UsuarioDTO> findAll() {
+		List<UsuarioDTO> dtoList = new ArrayList<>();
 		Iterable<Usuario> usuarios = usuarioDao.findAll();
 		for(Usuario usuario : usuarios) {
-			UsuarioResponse usuarioResponse = modelMapper.map(usuario, UsuarioResponse.class);
-			dtoList.add(usuarioResponse);	
+			UsuarioDTO userResponse = modelMapper.map(usuario, UsuarioDTO.class);
+			dtoList.add(userResponse);	
 		}
 		return dtoList;
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<UsuarioResponse> findAll(Pageable page) {
+	public List<UsuarioDTO> findAllByEmpresa(Empresa empresa) {
+		List<UsuarioDTO> dtoList = new ArrayList<>();
+		Iterable<Usuario> usuarios = usuarioDao.findByEmpresa(empresa);
+		
+		for(Usuario usuario : usuarios) {
+			UsuarioDTO userResponse = modelMapper.map(usuario, UsuarioDTO.class);
+			dtoList.add(userResponse);	
+		}
+		return dtoList;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<UsuarioDTO> findAllPage(Pageable page) {
 		Page<Usuario> paginaUsuarioss = usuarioDao.findAll(page);
-		return paginaUsuarioss.map(usuario -> modelMapper.map(usuario, UsuarioResponse.class));
+		return paginaUsuarioss.map(usuario -> modelMapper.map(usuario, UsuarioDTO.class));
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<UsuarioDTO> findAllByEmpresaPage(Empresa empresa, Pageable page) {
+		Page<Usuario> paginaUsuarioss = usuarioDao.findByEmpresa(empresa, page);
+		return paginaUsuarioss.map(usuario -> modelMapper.map(usuario, UsuarioDTO.class));
 	}
 
 	@Override
 	@Transactional
 	public void delete(Long id) {
 		usuarioDao.deleteById(id);
+	}
+	
+	@Override
+	@Transactional
+	public void deleteByIdAndEmpresa(Long id, Empresa empresa) {
+		usuarioDao.deleteByIdAndEmpresa(id, empresa);
 	}
 
 	@Override
@@ -97,12 +135,16 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService{
 			log.error("Error en el login: no existe el usuario {} en el sistema", username);
 			throw new UsernameNotFoundException("Error en el login: no existe el usuario '"+username+"' el sistema");
 		}
+		else if(!usuarioDTO.isEnabled()) {
+			log.error("Error en el login: el usuario {} no esta habilitado para ingresar al sistema", username);
+			throw new UsernameNotFoundException("Error en el login: el usuario '"+username+"' no esta habilitado para ingresar al sistema");
+		}
 		
 		List<GrantedAuthority> authorities = usuarioDTO.getRoles()
 				.stream()
 				.map(role -> new SimpleGrantedAuthority(role.getNombre()))
 				.collect(Collectors.toList());
-				
+
 		return new User(usuarioDTO.getUsername(), usuarioDTO.getPassword(), usuarioDTO.isEnabled(), true, true, true, authorities);
 	}
 }

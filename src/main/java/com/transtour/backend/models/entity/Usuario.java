@@ -35,7 +35,7 @@ public class Usuario implements Serializable{
 	@Column(nullable = false, length = 30)
 	private String nombre;
 	
-	@Column(unique = true, nullable = false, length = 30)
+	@Column(nullable = false, length = 30)
 	private String apellido;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -57,7 +57,7 @@ public class Usuario implements Serializable{
 	@JoinColumn(name = "empresa", nullable = true)
 	private Empresa empresa;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinTable(
 			name = "usuarios_roles", 
 			joinColumns = @JoinColumn(name = "usuario"), 

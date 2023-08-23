@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IItinerarioDao;
-import com.transtour.backend.models.dto.response.ItinerarioResponse;
+import com.transtour.backend.models.dto.ItinerarioDTO;
 import com.transtour.backend.models.entity.Itinerario;
 import com.transtour.backend.models.services.IItinerarioService;
 
@@ -27,25 +27,25 @@ public class ItinerarioServiceImpl implements IItinerarioService{
 	
 	@Override
 	@Transactional
-	public ItinerarioResponse save(ItinerarioResponse itinerarioDTO) {
+	public ItinerarioDTO save(ItinerarioDTO itinerarioDTO) {
 		Itinerario itinerario = modelMapper.map(itinerarioDTO, Itinerario.class);
 		itinerario = itinerarioDao.save(itinerario);
-		return modelMapper.map(itinerario, ItinerarioResponse.class);
+		return modelMapper.map(itinerario, ItinerarioDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public ItinerarioResponse findById(Long id) {
-		return modelMapper.map(itinerarioDao.findById(id), ItinerarioResponse.class);
+	public ItinerarioDTO findById(Long id) {
+		return modelMapper.map(itinerarioDao.findById(id), ItinerarioDTO.class);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public  List<ItinerarioResponse> findByFechaAndDestino(LocalDate fechaEmbarque, String nombreDestino) {
-		List<ItinerarioResponse> dtoList = new ArrayList<>();
+	public  List<ItinerarioDTO> findByFechaAndDestino(LocalDate fechaEmbarque, String nombreDestino) {
+		List<ItinerarioDTO> dtoList = new ArrayList<>();
 		Iterable<Itinerario> itinerarios = itinerarioDao.findByFechaAndDestino(fechaEmbarque, nombreDestino);
 		for(Itinerario itinerario : itinerarios) {
-			ItinerarioResponse destinoDto = modelMapper.map(itinerario, ItinerarioResponse.class);
+			ItinerarioDTO destinoDto = modelMapper.map(itinerario, ItinerarioDTO.class);
 			dtoList.add(destinoDto);
 		}
 		return dtoList;
@@ -53,11 +53,11 @@ public class ItinerarioServiceImpl implements IItinerarioService{
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ItinerarioResponse> findAll() {
-		List<ItinerarioResponse> dtoList = new ArrayList<>();
+	public List<ItinerarioDTO> findAll() {
+		List<ItinerarioDTO> dtoList = new ArrayList<>();
 		Iterable<Itinerario> itinerarios = itinerarioDao.findAll();
 		for(Itinerario itinerario : itinerarios) {
-			ItinerarioResponse destinoDto = modelMapper.map(itinerario, ItinerarioResponse.class);
+			ItinerarioDTO destinoDto = modelMapper.map(itinerario, ItinerarioDTO.class);
 			dtoList.add(destinoDto);	
 		}
 		return dtoList;
@@ -65,9 +65,9 @@ public class ItinerarioServiceImpl implements IItinerarioService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<ItinerarioResponse> findAll(Pageable page) {
+	public Page<ItinerarioDTO> findAll(Pageable page) {
 		Page<Itinerario> paginaItinerarios = itinerarioDao.findAll(page);
-		return paginaItinerarios.map(itinerario -> modelMapper.map(itinerario, ItinerarioResponse.class));
+		return paginaItinerarios.map(itinerario -> modelMapper.map(itinerario, ItinerarioDTO.class));
 	}
 
 	@Override

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.response.ReservaResponse;
+import com.transtour.backend.models.dto.ReservaDTO;
 import com.transtour.backend.models.services.IReservaService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -39,13 +39,13 @@ public class ReservaRestController {
 	private IReservaService reservaService;
 
 	@GetMapping("/reservas")
-	public List<ReservaResponse> index() {
+	public List<ReservaDTO> index() {
 		return reservaService.findAll();
 	}
 	
 	@GetMapping("/reservas/{codigoReserva}")
 	public ResponseEntity<Object> show(@PathVariable String codigoReserva) {
-		ReservaResponse reservaDTO;
+		ReservaDTO reservaDTO;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
@@ -66,15 +66,15 @@ public class ReservaRestController {
 	}
 	
 	@GetMapping("/reservas/page/{page}")
-	public Page<ReservaResponse> page(@PathVariable Integer page) {
+	public Page<ReservaDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return reservaService.findAll(pageable);
 	}
 	
 	@PostMapping("/reservas")
-public ResponseEntity<Object> create(@Valid @RequestBody ReservaResponse reservaDTO, BindingResult result) {
+public ResponseEntity<Object> create(@Valid @RequestBody ReservaDTO reservaDTO, BindingResult result) {
 		
-		ReservaResponse reservaNew;
+		ReservaDTO reservaNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {

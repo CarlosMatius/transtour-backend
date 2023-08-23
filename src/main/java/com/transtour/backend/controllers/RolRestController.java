@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.response.RolResponse;
+import com.transtour.backend.models.dto.RolDTO;
 import com.transtour.backend.models.services.IRolService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -34,14 +34,14 @@ public class RolRestController {
 	private IRolService rolService;
 	
 	@GetMapping("/roles")
-	public List<RolResponse> index() {
+	public List<RolDTO> index() {
 		return rolService.findAll();
 	}
 	
 	@PostMapping("/roles")
-public ResponseEntity<Object> create(@Valid @RequestBody RolResponse rolDTO, BindingResult result) {
+public ResponseEntity<Object> create(@Valid @RequestBody RolDTO rolDTO, BindingResult result) {
 		
-		RolResponse rolNew;
+		RolDTO rolNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {

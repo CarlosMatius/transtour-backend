@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.models.dto.response.TipoIdentificacionResponse;
+import com.transtour.backend.models.dto.TipoIdentificacionDTO;
 import com.transtour.backend.models.services.ITipoIdentificacionService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -37,14 +37,14 @@ public class TipoIdentificacionRestController {
 	private ITipoIdentificacionService tipoService;
 
 	@GetMapping("/tipos-identificaciones")
-	public List<TipoIdentificacionResponse> index() {
+	public List<TipoIdentificacionDTO> index() {
 		return tipoService.findAll();
 	}
 	
 	@PostMapping("/tipos-identificaciones")
-public ResponseEntity<Object> create(@Valid @RequestBody TipoIdentificacionResponse tipoDTO, BindingResult result) {
+public ResponseEntity<Object> create(@Valid @RequestBody TipoIdentificacionDTO tipoDTO, BindingResult result) {
 		
-		TipoIdentificacionResponse tipoNew;
+		TipoIdentificacionDTO tipoNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {
@@ -74,9 +74,9 @@ public ResponseEntity<Object> create(@Valid @RequestBody TipoIdentificacionRespo
 	}
 	
 	@PutMapping("/tipos-identificaciones/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody TipoIdentificacionResponse tipoDTO, BindingResult result, @PathVariable Long id) {
-		TipoIdentificacionResponse tipoActual = tipoService.findById(id);
-		TipoIdentificacionResponse tipoActualizado ;
+	public ResponseEntity<Object> update(@Valid @RequestBody TipoIdentificacionDTO tipoDTO, BindingResult result, @PathVariable Long id) {
+		TipoIdentificacionDTO tipoActual = tipoService.findById(id);
+		TipoIdentificacionDTO tipoActualizado ;
 		
 		Map<String, Object> response = new HashMap<>();
 

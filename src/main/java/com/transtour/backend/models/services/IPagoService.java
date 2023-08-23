@@ -5,15 +5,15 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.transtour.backend.models.dto.response.PagoResponse;
+import com.transtour.backend.models.dto.PagoDTO;
 
 public interface IPagoService {
 
-	public PagoResponse save(PagoResponse pagoDto);
+	public PagoDTO save(PagoDTO pagoDTO);
 	
-	public PagoResponse findByNumeroRecibo(String numeroRecibo);
+	public PagoDTO findByNumeroRecibo(String numeroRecibo);
 	
-	public List<PagoResponse> findAll();
+	public List<PagoDTO> findAll();
 	
-	public Page<PagoResponse> findAll(Pageable page);
+	public Page<PagoDTO> findAll(Pageable page);
 }

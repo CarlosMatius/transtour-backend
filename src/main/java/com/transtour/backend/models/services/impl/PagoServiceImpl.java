@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IPagoDao;
-import com.transtour.backend.models.dto.response.PagoResponse;
+import com.transtour.backend.models.dto.PagoDTO;
 import com.transtour.backend.models.entity.Pago;
 import com.transtour.backend.models.services.IPagoService;
 
@@ -26,24 +26,24 @@ public class PagoServiceImpl implements IPagoService{
 
 	@Override
 	@Transactional
-	public PagoResponse save(PagoResponse pagoDto) {
-		Pago pago = modelMapper.map(pagoDto, Pago.class);
+	public PagoDTO save(PagoDTO pagoDTO) {
+		Pago pago = modelMapper.map(pagoDTO, Pago.class);
 		pago = pagooDao.save(pago);
-		return modelMapper.map(pago, PagoResponse.class);
+		return modelMapper.map(pago, PagoDTO.class);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public PagoResponse findByNumeroRecibo(String numeroRecibo) {
-		return modelMapper.map(pagooDao.findByNumeroRecibo(numeroRecibo), PagoResponse.class);
+	public PagoDTO findByNumeroRecibo(String numeroRecibo) {
+		return modelMapper.map(pagooDao.findByNumeroRecibo(numeroRecibo), PagoDTO.class);
 	}
 
 	@Override
-	public List<PagoResponse> findAll() {
-		List<PagoResponse> dtoList = new ArrayList<>();
+	public List<PagoDTO> findAll() {
+		List<PagoDTO> dtoList = new ArrayList<>();
 		Iterable<Pago> pagos = pagooDao.findAll();
 		for(Pago pago : pagos) {
-			PagoResponse pagoDto = modelMapper.map(pago, PagoResponse.class);
+			PagoDTO pagoDto = modelMapper.map(pago, PagoDTO.class);
 			dtoList.add(pagoDto);	
 		}
 		return dtoList;
@@ -51,8 +51,8 @@ public class PagoServiceImpl implements IPagoService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<PagoResponse> findAll(Pageable page) {
+	public Page<PagoDTO> findAll(Pageable page) {
 		Page<Pago> paginaPagos = pagooDao.findAll(page);
-		return paginaPagos.map(pago -> modelMapper.map(pago, PagoResponse.class));
+		return paginaPagos.map(pago -> modelMapper.map(pago, PagoDTO.class));
 	}
 }

@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.transtour.backend.models.dto.response.EmpresaResponse;
+import com.transtour.backend.models.dto.EmpresaDTO;
 import com.transtour.backend.models.services.IEmpresaService;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -55,16 +55,17 @@ public class EmpresaRestController {
 	
 	@Autowired
 	private IEmpresaService empresaService;
+	
 
 	@GetMapping("/empresas")
-	public List<EmpresaResponse> index() {
+	public List<EmpresaDTO> index() {
 		return empresaService.findAll();
 	}
 	
 	@GetMapping("/empresas/by/{nit}")
 	public ResponseEntity<Object> show(@PathVariable String nit) {
 		
-		EmpresaResponse empresa;
+		EmpresaDTO empresa;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
@@ -86,7 +87,7 @@ public class EmpresaRestController {
 	@GetMapping("/empresas/{id}")
 	public ResponseEntity<Object> showId(@PathVariable Long id) {
 		
-		EmpresaResponse empresa;
+		EmpresaDTO empresa;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
@@ -106,15 +107,15 @@ public class EmpresaRestController {
 	}
 	
 	@GetMapping("/empresas/page/{page}")
-	public Page<EmpresaResponse> page(@PathVariable Integer page) {
+	public Page<EmpresaDTO> page(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
 		return empresaService.findAll(pageable);
 	}
 	
 	@PostMapping("/empresas")
-	public ResponseEntity<Object> create(@Valid @RequestBody EmpresaResponse empresaDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody EmpresaDTO empresaRequest, BindingResult result) {
 		
-		EmpresaResponse empresaNew;
+		EmpresaDTO empresaNew;
 		Map<String, Object> response = new HashMap<>();
 		
 		if(result.hasErrors()) {
@@ -129,7 +130,7 @@ public class EmpresaRestController {
 		
 		try {
 			
-			empresaNew = empresaService.save(empresaDTO);
+			empresaNew = empresaService.save(empresaRequest);
 			
 		} catch (DataAccessException e) {
 			response.put(MESSAGE, "No se pudo registrar la empresa en la base de datos");
@@ -144,10 +145,10 @@ public class EmpresaRestController {
 	}
 
 	@PutMapping("/empresas/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody EmpresaResponse empresaDto, BindingResult result, @PathVariable Long id) {
+	public ResponseEntity<Object> update(@Valid @RequestBody EmpresaDTO empresaRequest, BindingResult result, @PathVariable Long id) {
 		
-		EmpresaResponse empresaActual = empresaService.findById(id);
-		EmpresaResponse empresaActualizada;
+		EmpresaDTO empresaActual = empresaService.findById(id);
+		EmpresaDTO empresaActualizada;
 		
 		Map<String, Object> response = new HashMap<>();
 
@@ -167,11 +168,11 @@ public class EmpresaRestController {
 		}
 		
 		try {
-			empresaActual.setNombre(empresaDto.getNombre());
-			empresaActual.setNit(empresaDto.getNit());
-			empresaActual.setEmail(empresaDto.getEmail());
-			empresaActual.setTelefono(empresaDto.getTelefono());
-			empresaActual.setEnabled(empresaDto.isEnabled());
+			empresaActual.setNombre(empresaRequest.getNombre());
+			empresaActual.setNit(empresaRequest.getNit());
+			empresaActual.setEmail(empresaRequest.getEmail());
+			empresaActual.setTelefono(empresaRequest.getTelefono());
+			empresaActual.setEnabled(empresaRequest.isEnabled());
 			
 			empresaActualizada = empresaService.save(empresaActual);
 		} catch (DataAccessException e) {
@@ -193,7 +194,7 @@ public class EmpresaRestController {
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			EmpresaResponse empresaDTO = empresaService.findById(id);
+			EmpresaDTO empresaDTO = empresaService.findById(id);
 			String nombreFotoAnterior = empresaDTO.getImagen();
 			
 			if(nombreFotoAnterior !=null && nombreFotoAnterior.length() > 0) {
@@ -219,7 +220,7 @@ public class EmpresaRestController {
 	public ResponseEntity<Object> upload(@RequestParam("archivo") MultipartFile archivo, @RequestParam("archivo") Long id) {
 		Map<String, Object> response = new HashMap<>();
 		
-		EmpresaResponse empresaDTO = empresaService.findById(id);
+		EmpresaDTO empresaRequest = empresaService.findById(id);
 		String ruta = archivo.getOriginalFilename();
 		
 		if(!archivo.isEmpty() && ruta !=null) {
@@ -234,7 +235,7 @@ public class EmpresaRestController {
 				return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			
-			String nombreFotoAnterior = empresaDTO.getImagen();
+			String nombreFotoAnterior = empresaRequest.getImagen();
 			
 			if(nombreFotoAnterior !=null && nombreFotoAnterior.length() > 0) {
 				Path rutaFotoAnterior = Paths.get(CARPETA).resolve(nombreFotoAnterior).toAbsolutePath();
@@ -248,11 +249,10 @@ public class EmpresaRestController {
 				}
 			}
 			
-			empresaDTO.setImagen(nombreArchivo);
+			empresaRequest.setImagen(nombreArchivo);
+			empresaService.save(empresaRequest);
 			
-			empresaService.save(empresaDTO);
-			
-			response.put(EMPRESA, empresaDTO);
+			response.put(EMPRESA, empresaRequest);
 			response.put(MESSAGE, "Has subido correctamente la imagen: " + nombreArchivo);
 		}
 		

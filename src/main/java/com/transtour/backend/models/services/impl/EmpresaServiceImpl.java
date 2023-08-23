@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.transtour.backend.models.dao.IEmpresaDao;
-import com.transtour.backend.models.dto.response.EmpresaResponse;
+import com.transtour.backend.models.dto.EmpresaDTO;
 import com.transtour.backend.models.entity.Empresa;
 import com.transtour.backend.models.services.IEmpresaService;
 
@@ -26,31 +26,31 @@ public class EmpresaServiceImpl implements IEmpresaService{
 	
 	@Override
 	@Transactional
-	public EmpresaResponse save(EmpresaResponse empresaDto) {
-		Empresa empresa = modelMapper.map(empresaDto, Empresa.class);
+	public EmpresaDTO save(EmpresaDTO empresaDTO) {
+		Empresa empresa = modelMapper.map(empresaDTO, Empresa.class);
 		empresa = empresaDao.save(empresa);
-		return modelMapper.map(empresa, EmpresaResponse.class);
+		return modelMapper.map(empresa, EmpresaDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public EmpresaResponse findById(Long id) {
-		return modelMapper.map(empresaDao.findById(id), EmpresaResponse.class);
+	public EmpresaDTO findById(Long id) {
+		return modelMapper.map(empresaDao.findById(id), EmpresaDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public EmpresaResponse findByNit(String nit) {
-		return modelMapper.map(empresaDao.findByNit(nit), EmpresaResponse.class);
+	public EmpresaDTO findByNit(String nit) {
+		return modelMapper.map(empresaDao.findByNit(nit), EmpresaDTO.class);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<EmpresaResponse> findAll() {
-		List<EmpresaResponse> dtoList = new ArrayList<>();
+	public List<EmpresaDTO> findAll() {
+		List<EmpresaDTO> dtoList = new ArrayList<>();
 		Iterable<Empresa> empresas = empresaDao.findAll();
 		for(Empresa empresa : empresas) {
-			EmpresaResponse empresaDto = modelMapper.map(empresa, EmpresaResponse.class);
+			EmpresaDTO empresaDto = modelMapper.map(empresa, EmpresaDTO.class);
 			dtoList.add(empresaDto);	
 		}
 		return dtoList;
@@ -58,9 +58,9 @@ public class EmpresaServiceImpl implements IEmpresaService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<EmpresaResponse> findAll(Pageable page) {
+	public Page<EmpresaDTO> findAll(Pageable page) {
 		Page<Empresa> paginaEmpresas = empresaDao.findAll(page);
-		return paginaEmpresas.map(empresa -> modelMapper.map(empresa, EmpresaResponse.class));
+		return paginaEmpresas.map(empresa -> modelMapper.map(empresa, EmpresaDTO.class));
 	}
 
 	@Override
@@ -68,5 +68,4 @@ public class EmpresaServiceImpl implements IEmpresaService{
 	public void delete(Long id) {
 		empresaDao.deleteById(id);
 	}
-
 }

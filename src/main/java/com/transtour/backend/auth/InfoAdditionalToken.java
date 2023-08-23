@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Component;
 
-import com.transtour.backend.models.dto.response.UsuarioResponse;
+import com.transtour.backend.models.dto.UsuarioDTO;
 import com.transtour.backend.models.services.IUsuarioService;
 
 @Component
@@ -22,13 +22,13 @@ public class InfoAdditionalToken implements TokenEnhancer{
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 		
-		UsuarioResponse usuario = usuarioService.findByUsername(authentication.getName());
+		UsuarioDTO usuario = usuarioService.findByUsername(authentication.getName());
 
 		Map<String, Object> info = new HashMap<>();
 		info.put("info aditional", "Hola que tal " + usuario.getNombre() + " " + usuario.getApellido());
 		info.put("usuario Id", usuario.getId());
-		info.put("empresa Id", usuario.getEmpresa().getId() !=null ? usuario.getEmpresa().getId(): "");
-		info.put("nombre empresa", usuario.getEmpresa().getNombre() !=null ? usuario.getEmpresa().getId(): "");
+		info.put("empresa Id", usuario.getEmpresa() != null ? usuario.getEmpresa().getId() : 0);
+		info.put("nombre empresa", usuario.getEmpresa() != null ? usuario.getEmpresa().getNombre() : "superadministrador");
 		
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
 		
