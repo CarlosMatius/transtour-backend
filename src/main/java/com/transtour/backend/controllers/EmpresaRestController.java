@@ -62,6 +62,12 @@ public class EmpresaRestController {
 		return empresaService.findAll();
 	}
 	
+	@GetMapping("/empresas/page/{page}")
+	public Page<EmpresaDTO> page(@PathVariable Integer page) {
+		Pageable pageable = PageRequest.of(page, 3);
+		return empresaService.findAll(pageable);
+	}
+	
 	@GetMapping("/empresas/by/{nit}")
 	public ResponseEntity<Object> show(@PathVariable String nit) {
 		
@@ -104,12 +110,6 @@ public class EmpresaRestController {
 		}
 		
 		return new ResponseEntity<>(empresa, HttpStatus.OK);
-	}
-	
-	@GetMapping("/empresas/page/{page}")
-	public Page<EmpresaDTO> page(@PathVariable Integer page) {
-		Pageable pageable = PageRequest.of(page, 3);
-		return empresaService.findAll(pageable);
 	}
 	
 	@PostMapping("/empresas")

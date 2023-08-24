@@ -28,30 +28,72 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         http
         	.authorizeRequests(authorizeRequests -> 
         		authorizeRequests
-        			.antMatchers(HttpMethod.GET, "/v1/empresas", "/v1/empresas/{id}", "/v1/usuarios", "/v1/usuarios/{id}").permitAll()
+        			.antMatchers(HttpMethod.GET, 
+        					"/v1/roles",
+        					"/v1/tipos-identificaciones",
+        					"/v1/itinerarios/{fechaEmbarque}/{nombreDestino}"
+        					).permitAll()
         			
         			.antMatchers(HttpMethod.GET,
         					"/v1/usuarios",
         					"/v1/usuarios/{id}",
         					"/v1/usuarios/by/{identificacion}",
-        					"/v1/usuarios/page/**"
+        					"/v1/usuarios/page/**",
+        					"/v1/embarcaciones",
+        					"/v1/embarcaciones/page/**",
+        					"/v1/embarcaciones/{id}",
+        					"/v1/itinerarios",
+        					"/v1/itinerarios/page/**",
+        					"/v1/itinerarios/{id}"
         					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
         			
         			.antMatchers(HttpMethod.POST, 
-        					"/v1/usuarios"
+        					"/v1/usuarios",
+        					"/v1/embarcaciones",
+        					"/v1/itinerarios"
         					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
         			
         			.antMatchers(HttpMethod.PUT, 
-        					"/v1/usuarios/{id}"
+        					"/v1/usuarios/{id}",
+        					"/v1/embarcaciones/{id}",
+        					"/v1/itinerarios/{id}"
         					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
         			
         			.antMatchers(HttpMethod.DELETE, 
-        					"/v1/usuarios/{id}"
+        					"/v1/usuarios/{id}",
+        					"/v1/embarcaciones/{id}",
+        					"/v1/itinerarios/{id}"
         					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
         			
+        			.antMatchers(HttpMethod.GET, 
+        					"/v1/empresas",
+        					"/v1/empresas/page/**",
+        					"/v1/empresas/by/{nit}",
+        					"/v1/empresas/{id}",
+        					"/v1/empresas/uploads/img/{nombreFoto:.+}"
+        					).hasRole(SUPERADMINISTRADOR)
+        			
+        			.antMatchers(HttpMethod.POST, 
+        					"/tipos-identificaciones",
+        					"/v1/empresas",
+        					"/v1/empresas/upload"
+        					).hasRole(SUPERADMINISTRADOR)
+        			
+        			.antMatchers(HttpMethod.PUT, 
+        					"/tipos-identificaciones/{id}",
+        					"/v1/empresas/{id}"
+        					).hasRole(SUPERADMINISTRADOR)
+        			
+        			.antMatchers(HttpMethod.DELETE, 
+        					"/v1/tipos-identificaciones/{id}",
+        					"/v1/empresas/{id}"
+        					).hasRole(SUPERADMINISTRADOR)
         			
         			
         			
+        			
+        			
+        			.antMatchers(HttpMethod.GET, "/v1/empresas", "/v1/empresas/{id}", "/v1/usuarios", "/v1/usuarios/{id}").permitAll()
         			.antMatchers(HttpMethod.POST, "/v1/destinos").permitAll()
         			.antMatchers(HttpMethod.PUT, "/v1/empresas/{id}").permitAll()
         			.antMatchers(HttpMethod.DELETE, "/v1/empresas/{id}").permitAll()

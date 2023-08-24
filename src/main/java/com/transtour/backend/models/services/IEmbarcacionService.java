@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.transtour.backend.models.dto.EmbarcacionDTO;
+import com.transtour.backend.models.entity.Empresa;
 
 public interface IEmbarcacionService {
 
@@ -13,9 +14,15 @@ public interface IEmbarcacionService {
 	
 	public EmbarcacionDTO findById(Long id);
 	
+	public EmbarcacionDTO findByIdAndEmpresa(Long id, Empresa empresa);
+	
 	public List<EmbarcacionDTO> findAll();
 	
-	public Page<EmbarcacionDTO> findAll(Pageable page);
+	public List<EmbarcacionDTO> findAllByEmpresa(Empresa empresa);
+	
+	public Page<EmbarcacionDTO> findAllPage(Pageable page);
+	
+	public Page<EmbarcacionDTO> findAllByEmpresaPage(Empresa empresa, Pageable page);
 	
 	public void delete(Long id);
 }

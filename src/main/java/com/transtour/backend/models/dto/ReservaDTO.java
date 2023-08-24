@@ -28,6 +28,7 @@ public class ReservaDTO implements Serializable{
 	@NotNull(message = "no puede ser vacio")
 	private BigDecimal total;
 	
+	@NotNull(message = "no puede ser vacio")
 	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	private ItinerarioDTO itinerario;
 	

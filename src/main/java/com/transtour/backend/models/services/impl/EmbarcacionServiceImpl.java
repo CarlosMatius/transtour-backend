@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.transtour.backend.models.dao.IEmbarcacionDao;
 import com.transtour.backend.models.dto.EmbarcacionDTO;
 import com.transtour.backend.models.entity.Embarcacion;
+import com.transtour.backend.models.entity.Empresa;
 import com.transtour.backend.models.services.IEmbarcacionService;
 
 @Service
@@ -37,6 +38,12 @@ public class EmbarcacionServiceImpl implements IEmbarcacionService{
 	public EmbarcacionDTO findById(Long id) {
 		return modelMapper.map(embarcacionDao.findById(id), EmbarcacionDTO.class);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public EmbarcacionDTO findByIdAndEmpresa(Long id, Empresa empresa) {
+		return modelMapper.map(embarcacionDao.findByIdAndEmpresa(id, empresa), EmbarcacionDTO.class);
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -52,9 +59,29 @@ public class EmbarcacionServiceImpl implements IEmbarcacionService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<EmbarcacionDTO> findAll(Pageable page) {
+	public Page<EmbarcacionDTO> findAllPage(Pageable page) {
 		Page<Embarcacion> paginaEmbarcaciones = embarcacionDao.findAll(page);
 		return paginaEmbarcaciones.map(embarcacion -> modelMapper.map(embarcacion, EmbarcacionDTO.class));
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<EmbarcacionDTO> findAllByEmpresaPage(Empresa empresa, Pageable page) {
+		Page<Embarcacion> paginaEmbarcaciones = embarcacionDao.findByEmpresa(empresa, page);
+		return paginaEmbarcaciones.map(embarcacion -> modelMapper.map(embarcacion, EmbarcacionDTO.class));
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<EmbarcacionDTO> findAllByEmpresa(Empresa empresa) {
+		List<EmbarcacionDTO> dtoList = new ArrayList<>();
+		Iterable<Embarcacion> embarcaciones = embarcacionDao.findByEmpresa(empresa);
+		
+		for(Embarcacion embarcacion : embarcaciones) {
+			EmbarcacionDTO embarcacionDTO = modelMapper.map(embarcacion, EmbarcacionDTO.class);
+			dtoList.add(embarcacionDTO);	
+		}
+		return dtoList;
 	}
 
 	@Override

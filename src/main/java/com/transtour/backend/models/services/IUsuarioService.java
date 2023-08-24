@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.transtour.backend.models.dto.UsuarioDTO;
+import com.transtour.backend.models.dto.UsuarioResponse;
 import com.transtour.backend.models.entity.Empresa;
 
 public interface IUsuarioService {
@@ -18,19 +19,17 @@ public interface IUsuarioService {
 	
 	public UsuarioDTO findByUsername(String user);
 	
-	public UsuarioDTO findByIdentificacion(String identificacion);
+	public UsuarioResponse findByIdentificacion(String identificacion);
 	
-	public UsuarioDTO findByIdentificacionAndEmpresa(String identificacion, Empresa empresa);
+	public UsuarioResponse findByIdentificacionAndEmpresa(String identificacion, Empresa empresa);
 	
-	public List<UsuarioDTO> findAll();
+	public List<UsuarioResponse> findAll();
 	
-	public List<UsuarioDTO> findAllByEmpresa(Empresa empresa);
+	public List<UsuarioResponse> findAllByEmpresa(Empresa empresa);
 	
-	public Page<UsuarioDTO> findAllPage(Pageable page);
+	public Page<UsuarioResponse> findAllPage(Pageable page);
 	
-	public Page<UsuarioDTO> findAllByEmpresaPage(Empresa empresa, Pageable page);
+	public Page<UsuarioResponse> findAllByEmpresaPage(Empresa empresa, Pageable page);
 	
 	public void delete(Long id);
-	
-	public void deleteByIdAndEmpresa(Long id, Empresa empresa);
 }

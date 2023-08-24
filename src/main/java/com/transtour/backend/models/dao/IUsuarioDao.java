@@ -30,7 +30,5 @@ public interface IUsuarioDao extends JpaRepository<Usuario, Long>{
 	
 	@Transactional(readOnly = true)
 	public Page<Usuario> findByEmpresa(Empresa empresa, Pageable pageable);
-	
-	@Transactional
-	public void deleteByIdAndEmpresa(Long id, Empresa empresa);
+
 }

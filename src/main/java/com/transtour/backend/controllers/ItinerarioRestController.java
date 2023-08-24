@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.transtour.backend.helpers.CommonUtils;
 import com.transtour.backend.models.dto.EmbarcacionDTO;
 import com.transtour.backend.models.dto.ItinerarioDTO;
 import com.transtour.backend.models.services.IEmbarcacionService;
@@ -45,16 +47,65 @@ public class ItinerarioRestController {
 	
 	@Autowired
 	private IEmbarcacionService embarcacionService;
-
+	
+	@Autowired
+	private CommonUtils commonUtil;
+	
 	@GetMapping("/itinerarios")
-	public List<ItinerarioDTO> index() {
-		return itinerarioService.findAll();
+	public List<ItinerarioDTO> index(Authentication authentication) {
+		List<ItinerarioDTO> itinerarios;
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			itinerarios = itinerarioService.findAll();
+		}
+		else {
+			itinerarios = itinerarioService.findAllByEmpresaId(commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+		}
+		return itinerarios;
 	}
 	
 	@GetMapping("/itinerarios/page/{page}")
-	public Page<ItinerarioDTO> page(@PathVariable Integer page) {
+	public Page<ItinerarioDTO> page(@PathVariable Integer page, Authentication authentication) {
 		Pageable pageable = PageRequest.of(page, 3);
-		return itinerarioService.findAll(pageable);
+		Page<ItinerarioDTO> paginacion;
+		
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			paginacion = itinerarioService.findAllPage(pageable);
+		}
+		else {
+			paginacion = itinerarioService.findAllByEmpresaIdPage(commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId(), pageable);
+		}
+
+		return paginacion;
+	}
+	
+	@GetMapping("/itinerarios/{id}")
+	public ResponseEntity<Object> showId(@PathVariable Long id, Authentication authentication) {
+		ItinerarioDTO itinerarioDTO;
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			
+			if (commonUtil.isSuperAdmin(authentication.getName())) {
+				itinerarioDTO = itinerarioService.findById(id);
+				if(itinerarioDTO == null) {
+					response.put(MESSAGE, "El itinerario con id: " + id +" No existe en el sistema");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
+			else {
+				itinerarioDTO = itinerarioService.findByIdAndEmpresaId(id, commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+				if(itinerarioDTO == null) {
+					response.put(MESSAGE, "El itinerarion con id: " + id +" No existe en la empresa");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
+			
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo realizar la consulta a la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		return new ResponseEntity<>(itinerarioDTO, HttpStatus.OK); 
 	}
 	
 	@GetMapping("/itinerarios/{fechaEmbarque}/{nombreDestino}")
@@ -81,7 +132,7 @@ public class ItinerarioRestController {
 	}
 	
 	@PostMapping("/itinerarios")
-	public ResponseEntity<Object> create(@Valid @RequestBody ItinerarioDTO itinerarioRequest, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody ItinerarioDTO itinerarioRequest, BindingResult result, Authentication authentication) {
 		
 		EmbarcacionDTO embarcacion;
 		ItinerarioDTO itinerarioNew;
@@ -98,6 +149,7 @@ public class ItinerarioRestController {
 		}
 		
 		try {
+			
 			embarcacion = embarcacionService.findById(itinerarioRequest.getEmbarcacion().getId());
 			itinerarioRequest.setCupos(embarcacion.getCapacidad());
 			itinerarioNew = itinerarioService.save(itinerarioRequest);
@@ -115,10 +167,11 @@ public class ItinerarioRestController {
 	}
 
 	@PutMapping("/itinerarios/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody ItinerarioDTO itinerarioRequest, BindingResult result, @PathVariable Long id) {
-		ItinerarioDTO itinerarioActual = itinerarioService.findById(id);
+	public ResponseEntity<Object> update(
+			@Valid @RequestBody ItinerarioDTO itinerarioRequest, 
+			BindingResult result, @PathVariable Long id, Authentication authentication) {
+		ItinerarioDTO itinerarioActual;
 		ItinerarioDTO itinerarioActualizado;
-		
 		Map<String, Object> response = new HashMap<>();
 
 		if(result.hasErrors()) {
@@ -131,9 +184,19 @@ public class ItinerarioRestController {
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
-		if(itinerarioActual == null) {
-			response.put(MESSAGE, "Error: el itinerario con ID: " + id + " No existe en el sistema");
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			itinerarioActual = itinerarioService.findById(id);
+			if(itinerarioActual == null) {
+				response.put(MESSAGE, "El itinerario con id: " + id +" No existe en el sistema");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			}
+		}
+		else {
+			itinerarioActual = itinerarioService.findByIdAndEmpresaId(id, commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+			if(itinerarioActual == null) {
+				response.put(MESSAGE, "El itinerario con id: " + id +" No existe en la empresa");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			}
 		}
 		
 		try {
@@ -159,19 +222,39 @@ public class ItinerarioRestController {
 	}
 	
 	@DeleteMapping("/itinerarios/{id}")
-	public ResponseEntity<Object> delete(@PathVariable Long id) {
-		
+	public ResponseEntity<Object> delete(@PathVariable Long id, Authentication authentication) {
+		ItinerarioDTO itinerarioDTO;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			itinerarioService.delete(id);
+			if (commonUtil.isSuperAdmin(authentication.getName())) {
+				itinerarioDTO = itinerarioService.findById(id);
+				if(itinerarioDTO != null) {
+					itinerarioService.delete(itinerarioDTO.getId());
+					response.put(MESSAGE, "El itinerario ha sido eliminado exitosamente!");
+				}
+				else {
+					response.put(MESSAGE, "El itinerario con id: " + id +" No existe en el sistema");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
+			else {
+				itinerarioDTO = itinerarioService.findByIdAndEmpresaId(id, commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+				if(itinerarioDTO != null) {
+					itinerarioService.delete(itinerarioDTO.getId());
+					response.put(MESSAGE, "El itinerario ha sido eliminado exitosamente!");
+				}
+				else {
+					response.put(MESSAGE, "El itinerarion con id: " + id +" No existe en la empresa");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
+			
 		} catch (DataAccessException e) {
 			response.put(MESSAGE, "No se pudo eliminar el itinerario en la base de datos");
 			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		response.put(MESSAGE, "El itinerario ha sido eliminado exitosamente!");
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

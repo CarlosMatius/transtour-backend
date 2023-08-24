@@ -28,8 +28,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.transtour.backend.helpers.CommonUtils;
 import com.transtour.backend.models.dto.RolDTO;
 import com.transtour.backend.models.dto.UsuarioDTO;
+import com.transtour.backend.models.dto.UsuarioResponse;
 import com.transtour.backend.models.entity.Empresa;
 import com.transtour.backend.models.services.IEmpresaService;
 import com.transtour.backend.models.services.IRolService;
@@ -55,29 +57,46 @@ public class UsuarioRestController {
 	@Autowired
 	private IEmpresaService empresaService;
 	
+	@Autowired
+	private CommonUtils commonUtil;
+	
 	@GetMapping("/usuarios")
-	public List<UsuarioDTO> index(Authentication authentication) {
-		List<UsuarioDTO> usuarios;
-		UsuarioDTO usuarioSesion = usuarioService.findByUsername(authentication.getName());
-		
-		if (isSuperAdmin(usuarioSesion.getRoles())) {
+	public List<UsuarioResponse> index(Authentication authentication) {
+		List<UsuarioResponse> usuarios;
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
 			usuarios  = usuarioService.findAll();
 		}
 		else {
-			usuarios  = usuarioService.findAllByEmpresa(modelMapper.map(usuarioSesion.getEmpresa(), Empresa.class));
+			usuarios  = usuarioService.findAllByEmpresa(modelMapper.map(commonUtil.infoUsuario(authentication.getName()).getEmpresa(), Empresa.class));
 		}
 		return usuarios;
+	}
+	
+	@GetMapping("/usuarios/page/{page}")
+	public Page<UsuarioResponse> page(@PathVariable Integer page, Authentication authentication) {
+		Pageable pageable = PageRequest.of(page, 3);
+		Page<UsuarioResponse> paginacion;
+		/* 
+		 * esto es para probar ordenamiento PageRequest.of(pageNum, pageSize, Sort.by("nombre").ascending());
+		 * */
+		
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			paginacion = usuarioService.findAllPage(pageable);
+		}
+		else {
+			paginacion = usuarioService.findAllByEmpresaPage(modelMapper.map(commonUtil.infoUsuario(authentication.getName()).getEmpresa(), Empresa.class), pageable);
+		}
+		return paginacion;
 	}
 	
 	@GetMapping("/usuarios/{id}")
 	public ResponseEntity<Object> showId(@PathVariable Long id, Authentication authentication) {
 		UsuarioDTO usuarioDTO;
 		Map<String, Object> response = new HashMap<>();
-		UsuarioDTO usuarioSesion = usuarioService.findByUsername(authentication.getName());
 		
 		try {
 			
-			if (isSuperAdmin(usuarioSesion.getRoles())) {
+			if (commonUtil.isSuperAdmin(authentication.getName())) {
 				usuarioDTO = usuarioService.findById(id);
 				if(usuarioDTO == null) {
 					response.put(MESSAGE, "El usuario con id: " + id +" No existe en el sistema");
@@ -85,7 +104,7 @@ public class UsuarioRestController {
 				}
 			}
 			else {
-				usuarioDTO = usuarioService.findByIdAndEmpresa(id,modelMapper.map(usuarioSesion.getEmpresa(), Empresa.class));
+				usuarioDTO = usuarioService.findByIdAndEmpresa(id,modelMapper.map(commonUtil.infoUsuario(authentication.getName()).getEmpresa(), Empresa.class));
 				if(usuarioDTO == null) {
 					response.put(MESSAGE, "El usuario con id: " + id +" No existe en la empresa");
 					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -102,22 +121,21 @@ public class UsuarioRestController {
 	
 	@GetMapping("/usuarios/by/{identificacion}")
 	public ResponseEntity<Object> showIdentificacion(@PathVariable String identificacion, Authentication authentication) {
-		UsuarioDTO usuarioDTO;
+		UsuarioResponse usuarioResponse;
 		Map<String, Object> response = new HashMap<>();
-		UsuarioDTO usuarioSesion = usuarioService.findByUsername(authentication.getName());
 		
 		try {
 			
-			if (isSuperAdmin(usuarioSesion.getRoles())) {
-				usuarioDTO = usuarioService.findByIdentificacion(identificacion);
-				if(usuarioDTO == null) {
+			if (commonUtil.isSuperAdmin(authentication.getName())) {
+				usuarioResponse = usuarioService.findByIdentificacion(identificacion);
+				if(usuarioResponse == null) {
 					response.put(MESSAGE, "El usuario con identificacion: " + identificacion +" No existe en el sistema");
 					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 				}
 			}
 			else {
-				usuarioDTO = usuarioService.findByIdentificacionAndEmpresa(identificacion,modelMapper.map(usuarioSesion.getEmpresa(), Empresa.class));
-				if(usuarioDTO == null) {
+				usuarioResponse = usuarioService.findByIdentificacionAndEmpresa(identificacion, modelMapper.map(commonUtil.infoUsuario(authentication.getName()).getEmpresa(), Empresa.class));
+				if(usuarioResponse == null) {
 					response.put(MESSAGE, "El usuario con identificacion: " + identificacion +" No existe en la empresa");
 					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 				}
@@ -128,30 +146,13 @@ public class UsuarioRestController {
 			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
-		return new ResponseEntity<>(usuarioDTO, HttpStatus.OK); 
-	}
-	
-	@GetMapping("/usuarios/page/{page}")
-	public Page<UsuarioDTO> page(@PathVariable Integer page, Authentication authentication) {
-		Pageable pageable = PageRequest.of(page, 3);
-		UsuarioDTO usuarioSesion = usuarioService.findByUsername(authentication.getName());
-		
-		if (isSuperAdmin(usuarioSesion.getRoles())) {
-			return usuarioService.findAllPage(pageable);
-		}
-		else {
-			return usuarioService.findAllByEmpresaPage(modelMapper.map(usuarioSesion.getEmpresa(), Empresa.class), pageable);
-		}
-
+		return new ResponseEntity<>(usuarioResponse, HttpStatus.OK); 
 	}
 	
 	@PostMapping("/usuarios")
-	public ResponseEntity<Object> create(
-			@Valid @RequestBody UsuarioDTO usuarioDTO, 
-			BindingResult result, Authentication authentication) {
+	public ResponseEntity<Object> create(@Valid @RequestBody UsuarioDTO usuarioDTO, BindingResult result, Authentication authentication) {
 
 		Map<String, Object> response = new HashMap<>();
-		UsuarioDTO usuarioSesion = usuarioService.findByUsername(authentication.getName());
 		UsuarioDTO usuarioNew;
 		RolDTO rolDTO;
 		List<RolDTO> roles = new ArrayList<>();
@@ -175,8 +176,8 @@ public class UsuarioRestController {
 				}
 			}
 			
-			if (!isSuperAdmin(usuarioSesion.getRoles())) {
-				usuarioDTO.setEmpresa(usuarioSesion.getEmpresa());
+			if (!commonUtil.isSuperAdmin(authentication.getName())) {
+				usuarioDTO.setEmpresa(commonUtil.infoUsuario(authentication.getName()).getEmpresa());
 			}
 			
 			usuarioDTO.setRoles(roles);
@@ -195,12 +196,8 @@ public class UsuarioRestController {
 	}
 	
 	@PutMapping("/usuarios/{id}")
-	public ResponseEntity<Object> update(
-			@Valid @RequestBody UsuarioDTO usuarioDTO, 
-			BindingResult result, @PathVariable Long id, 
-			Authentication authentication) {
+	public ResponseEntity<Object> update(@Valid @RequestBody UsuarioDTO usuarioDTO, BindingResult result, @PathVariable Long id, Authentication authentication) {
 		
-		UsuarioDTO usuarioSesion = usuarioService.findByUsername(authentication.getName());
 		UsuarioDTO usuarioActual;
 		UsuarioDTO usuarioActualizado;
 		Map<String, Object> response = new HashMap<>();
@@ -217,7 +214,7 @@ public class UsuarioRestController {
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
-		if (isSuperAdmin(usuarioSesion.getRoles())) {
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
 			usuarioActual = usuarioService.findById(id);
 			if(usuarioActual == null) {
 				response.put(MESSAGE, "El usuario con id: " + id +" No existe en el sistema");
@@ -225,7 +222,7 @@ public class UsuarioRestController {
 			}
 		}
 		else {
-			usuarioActual = usuarioService.findByIdAndEmpresa(id,modelMapper.map(usuarioSesion.getEmpresa(), Empresa.class));
+			usuarioActual = usuarioService.findByIdAndEmpresa(id, modelMapper.map(commonUtil.infoUsuario(authentication.getName()).getEmpresa(), Empresa.class));
 			if(usuarioActual == null) {
 				response.put(MESSAGE, "El usuario con id: " + id +" No existe en la empresa");
 				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -270,10 +267,9 @@ public class UsuarioRestController {
 		Map<String, Object> response = new HashMap<>();
 		UsuarioDTO usuarioDTO;
 		UsuarioDTO usuarioEliminar = null;
-		UsuarioDTO usuarioSesion = usuarioService.findByUsername(authentication.getName());
 		
 		try {
-			if(isSuperAdmin(usuarioSesion.getRoles())) {
+			if (commonUtil.isSuperAdmin(authentication.getName())) {
 				usuarioDTO = usuarioService.findById(id);
 				if(usuarioDTO != null) {
 					usuarioEliminar = asignarUsuario(usuarioDTO.getEmpresa().getUsuarios(), usuarioDTO.getId());
@@ -289,7 +285,7 @@ public class UsuarioRestController {
 				}
 			}
 			else {
-				usuarioDTO = usuarioService.findByIdAndEmpresa(id,modelMapper.map(usuarioSesion.getEmpresa(), Empresa.class));
+				usuarioDTO = usuarioService.findByIdAndEmpresa(id, modelMapper.map(commonUtil.infoUsuario(authentication.getName()).getEmpresa(), Empresa.class));
 				if(usuarioDTO != null) {
 					usuarioEliminar = asignarUsuario(usuarioDTO.getEmpresa().getUsuarios(), usuarioDTO.getId());
 					if(usuarioEliminar != null) {
@@ -311,18 +307,6 @@ public class UsuarioRestController {
 		}
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-	
-	private boolean isSuperAdmin(List<RolDTO> roles) {
-		List<RolDTO> rolesAsignados = roles;
-		boolean esSuperadministrador = false;
-		
-		for (RolDTO rol : rolesAsignados) {
-			if (rol.getNombre().equals("ROLE_SUPERADMINISTRADOR")) {
-		        esSuperadministrador = true;
-		    }
-		}
-		return esSuperadministrador;
 	}
 	
 	private UsuarioDTO asignarUsuario(List<UsuarioDTO> usuarios, Long usuarioId) {

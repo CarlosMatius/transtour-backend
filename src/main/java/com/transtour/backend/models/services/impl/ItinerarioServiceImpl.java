@@ -41,12 +41,18 @@ public class ItinerarioServiceImpl implements IItinerarioService{
 	
 	@Override
 	@Transactional(readOnly = true)
+	public ItinerarioDTO findByIdAndEmpresaId(Long id, Long empresaId) {
+		return modelMapper.map(itinerarioDao.findItinerarioByIdAndEmpresaId(id, empresaId), ItinerarioDTO.class);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
 	public  List<ItinerarioDTO> findByFechaAndDestino(LocalDate fechaEmbarque, String nombreDestino) {
 		List<ItinerarioDTO> dtoList = new ArrayList<>();
-		Iterable<Itinerario> itinerarios = itinerarioDao.findByFechaAndDestino(fechaEmbarque, nombreDestino);
+		Iterable<Itinerario> itinerarios = itinerarioDao.findItinerariosByFechaEmbarqueAndDestino(fechaEmbarque, nombreDestino);
 		for(Itinerario itinerario : itinerarios) {
-			ItinerarioDTO destinoDto = modelMapper.map(itinerario, ItinerarioDTO.class);
-			dtoList.add(destinoDto);
+			ItinerarioDTO itinerarioDto = modelMapper.map(itinerario, ItinerarioDTO.class);
+			dtoList.add(itinerarioDto);
 		}
 		return dtoList;
 	}
@@ -65,9 +71,29 @@ public class ItinerarioServiceImpl implements IItinerarioService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<ItinerarioDTO> findAll(Pageable page) {
+	public List<ItinerarioDTO> findAllByEmpresaId(Long empresaId) {
+		List<ItinerarioDTO> dtoList = new ArrayList<>();
+		Iterable<Itinerario> itinerarios = itinerarioDao.findItinerariosByEmpresaId(empresaId);
+		
+		for(Itinerario itinerario : itinerarios) {
+			ItinerarioDTO itinerarioDTO = modelMapper.map(itinerario, ItinerarioDTO.class);
+			dtoList.add(itinerarioDTO);	
+		}
+		return dtoList;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<ItinerarioDTO> findAllPage(Pageable page) {
 		Page<Itinerario> paginaItinerarios = itinerarioDao.findAll(page);
 		return paginaItinerarios.map(itinerario -> modelMapper.map(itinerario, ItinerarioDTO.class));
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<ItinerarioDTO> findAllByEmpresaIdPage(Long empresaId, Pageable page) {
+		Page<Itinerario> paginaItinerario = itinerarioDao.findItinerariosByEmpresaId(empresaId, page);
+		return paginaItinerario.map(itinerario -> modelMapper.map(itinerario, ItinerarioDTO.class));
 	}
 
 	@Override
