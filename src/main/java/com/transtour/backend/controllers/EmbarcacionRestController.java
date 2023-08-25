@@ -70,13 +70,15 @@ public class EmbarcacionRestController {
 	@GetMapping("/embarcaciones/page/{page}")
 	public Page<EmbarcacionDTO> page(@PathVariable Integer page, Authentication authentication) {
 		Pageable pageable = PageRequest.of(page, 3);
+		Page<EmbarcacionDTO> paginacion;
 		
 		if (commonUtil.isSuperAdmin(authentication.getName())) {
-			return embarcacionService.findAllPage(pageable);
+			paginacion = embarcacionService.findAllPage(pageable);
 		}
 		else {
-			return embarcacionService.findAllByEmpresaPage(modelMapper.map(commonUtil.infoUsuario(authentication.getName()).getEmpresa(), Empresa.class), pageable);
+			paginacion = embarcacionService.findAllByEmpresaPage(modelMapper.map(commonUtil.infoUsuario(authentication.getName()).getEmpresa(), Empresa.class), pageable);
 		}
+		return paginacion;
 	}
 	
 	@GetMapping("/embarcaciones/{id}")

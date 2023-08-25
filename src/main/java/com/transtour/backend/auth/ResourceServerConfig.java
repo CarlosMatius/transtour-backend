@@ -31,39 +31,16 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         			.antMatchers(HttpMethod.GET, 
         					"/v1/roles",
         					"/v1/tipos-identificaciones",
-        					"/v1/itinerarios/{fechaEmbarque}/{nombreDestino}"
+        					"/v1/itinerarios/{fechaEmbarque}/{nombreDestino}",
+        					"/v1/reservas/{codigoReserva}"
         					).permitAll()
         			
-        			.antMatchers(HttpMethod.GET,
-        					"/v1/usuarios",
-        					"/v1/usuarios/{id}",
-        					"/v1/usuarios/by/{identificacion}",
-        					"/v1/usuarios/page/**",
-        					"/v1/embarcaciones",
-        					"/v1/embarcaciones/page/**",
-        					"/v1/embarcaciones/{id}",
-        					"/v1/itinerarios",
-        					"/v1/itinerarios/page/**",
-        					"/v1/itinerarios/{id}"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.POST, 
-        					"/v1/usuarios",
-        					"/v1/embarcaciones",
-        					"/v1/itinerarios"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.PUT, 
-        					"/v1/usuarios/{id}",
-        					"/v1/embarcaciones/{id}",
-        					"/v1/itinerarios/{id}"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.DELETE, 
-        					"/v1/usuarios/{id}",
-        					"/v1/embarcaciones/{id}",
-        					"/v1/itinerarios/{id}"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+        			.antMatchers(HttpMethod.POST,
+        					"/v1/reservas",
+        					"/v1/responsables",
+        					"/v1/pasajeros",
+        					"/v1/pagos"
+        					).permitAll()
         			
         			.antMatchers(HttpMethod.GET, 
         					"/v1/empresas",
@@ -80,7 +57,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         					).hasRole(SUPERADMINISTRADOR)
         			
         			.antMatchers(HttpMethod.PUT, 
-        					"/tipos-identificaciones/{id}",
+        					"/v1/tipos-identificaciones/{id}",
         					"/v1/empresas/{id}"
         					).hasRole(SUPERADMINISTRADOR)
         			
@@ -89,9 +66,48 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         					"/v1/empresas/{id}"
         					).hasRole(SUPERADMINISTRADOR)
         			
+        			.antMatchers(HttpMethod.GET,
+        					"/v1/usuarios",
+        					"/v1/usuarios/{id}",
+        					"/v1/usuarios/by/{identificacion}",
+        					"/v1/usuarios/page/**",
+        					"/v1/embarcaciones",
+        					"/v1/embarcaciones/page/**",
+        					"/v1/embarcaciones/{id}",
+        					"/v1/itinerarios",
+        					"/v1/itinerarios/page/**",
+        					"/v1/itinerarios/{id}",
+        					"/v1/reservas/{id}",
+        					"/v1/pagos",
+        					"/v1/pagos/page/**",
+        					"/v1/pagos/{numeroRecibo}"
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
         			
+        			.antMatchers(HttpMethod.POST, 
+        					"/v1/usuarios",
+        					"/v1/embarcaciones",
+        					"/v1/itinerarios",
+        					"/v1/pagos"
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
         			
+        			.antMatchers(HttpMethod.PUT, 
+        					"/v1/usuarios/{id}",
+        					"/v1/embarcaciones/{id}",
+        					"/v1/itinerarios/{id}",
+        					"/v1/pasajeros/{id}"
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
         			
+        			.antMatchers(HttpMethod.DELETE, 
+        					"/v1/usuarios/{id}",
+        					"/v1/embarcaciones/{id}",
+        					"/v1/itinerarios/{id}",
+        					"/v1/reservas/{id}"
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+        			
+        			.antMatchers(HttpMethod.GET,
+        					"/v1/reservas",
+        					"/v1/reservas/page/**"
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR, ASESOR)
         			
         			.antMatchers(HttpMethod.GET, "/v1/empresas", "/v1/empresas/{id}", "/v1/usuarios", "/v1/usuarios/{id}").permitAll()
         			.antMatchers(HttpMethod.POST, "/v1/destinos").permitAll()

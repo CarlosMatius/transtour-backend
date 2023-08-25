@@ -13,7 +13,13 @@ public interface IPagoService {
 	
 	public PagoDTO findByNumeroRecibo(String numeroRecibo);
 	
+	public PagoDTO findByNumeroReciboAndEmpresaId(String numeroRecibo, Long id);
+	
+	public List<PagoDTO> findAllByEmpresaId(Long empresaId);
+	
 	public List<PagoDTO> findAll();
 	
-	public Page<PagoDTO> findAll(Pageable page);
+	public Page<PagoDTO> findAllPage(Pageable page);
+	
+	public Page<PagoDTO> findAllByEmpresaIdPage(Long empresaId, Pageable page);
 }

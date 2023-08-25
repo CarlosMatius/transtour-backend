@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.transtour.backend.helpers.CommonUtils;
 import com.transtour.backend.models.dto.PasajeroDTO;
 import com.transtour.backend.models.services.IPasajeroService;
 
@@ -34,6 +36,8 @@ public class PasajeroRestController {
 	@Autowired
 	private IPasajeroService pasajeroService;
 	
+	@Autowired
+	private CommonUtils commonUtil;
 
 	@PostMapping("/pasajeros")
 	public ResponseEntity<Object> create(@Valid @RequestBody PasajeroDTO pasajeroDTO, BindingResult result) {
@@ -68,10 +72,10 @@ public class PasajeroRestController {
 	}
 	
 	@PutMapping("/pasajeros/{id}")
-	public ResponseEntity<Object> update(@Valid @RequestBody PasajeroDTO pasajeroDTO, BindingResult result, @PathVariable Long id) {
-		PasajeroDTO pasajeroActual = pasajeroService.findById(id);
+	public ResponseEntity<Object> update(
+			@Valid @RequestBody PasajeroDTO pasajeroDTO, BindingResult result, @PathVariable Long id, Authentication authentication) {
+		PasajeroDTO pasajeroActual;
 		PasajeroDTO pasajeroActualizado;
-		
 		Map<String, Object> response = new HashMap<>();
 
 		if(result.hasErrors()) {
@@ -84,9 +88,19 @@ public class PasajeroRestController {
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
-		if(pasajeroActual == null) {
-			response.put(MESSAGE, "Error: el pasajero con ID: " + id + " No pertenece a ninguna reserva");
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			pasajeroActual = pasajeroService.findById(id);
+			if(pasajeroActual == null) {
+				response.put(MESSAGE, "El pasajero con id: " + id +" No existe en la reserva");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			}
+		}
+		else {
+			pasajeroActual = pasajeroService.findByIdAndReservaId(id, commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+			if(pasajeroActual == null) {
+				response.put(MESSAGE, "El pasajero con id: " + id +" No existe en la reserva");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			}
 		}
 		
 		try {

@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.transtour.backend.helpers.CommonUtils;
 import com.transtour.backend.models.dto.PagoDTO;
 import com.transtour.backend.models.services.IPagoService;
 
@@ -36,26 +38,58 @@ public class PagoRestController {
 	
 	@Autowired
 	private IPagoService pagoservice;
+	
+	@Autowired
+	private CommonUtils commonUtil;
 
 	@GetMapping("/pagos")
-	public List<PagoDTO> index() {
-		return pagoservice.findAll();
+	public List<PagoDTO> index(Authentication authentication) {
+		List<PagoDTO> pagos;
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			pagos = pagoservice.findAll();
+		}
+		else {
+			pagos = pagoservice.findAllByEmpresaId(commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+		}
+		return pagos;
 	}
 	
 	@GetMapping("/pagos/page/{page}")
-	public Page<PagoDTO> page(@PathVariable Integer page) {
+	public Page<PagoDTO> page(@PathVariable Integer page, Authentication authentication) {
 		Pageable pageable = PageRequest.of(page, 3);
-		return pagoservice.findAll(pageable);
+		Page<PagoDTO> paginacion;
+		
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			paginacion = pagoservice.findAllPage(pageable);
+		}
+		else {
+			paginacion = pagoservice.findAllByEmpresaIdPage(commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId(), pageable);
+		}
+
+		return paginacion;
 	}
 	
 	@GetMapping("/pagos/{numeroRecibo}")
-	public ResponseEntity<Object> show(@PathVariable String numeroRecibo) {
+	public ResponseEntity<Object> show(@PathVariable String numeroRecibo, Authentication authentication) {
 		
 		PagoDTO pagoDTO;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			pagoDTO = pagoservice.findByNumeroRecibo(numeroRecibo);
+			if (commonUtil.isSuperAdmin(authentication.getName())) {
+				pagoDTO = pagoservice.findByNumeroRecibo(numeroRecibo);
+				if(pagoDTO == null) {
+					response.put(MESSAGE, "El pago con numero de recibo: " + numeroRecibo +" No existe en el sistema");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
+			else {
+				pagoDTO = pagoservice.findByNumeroReciboAndEmpresaId(numeroRecibo, commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+				if(pagoDTO == null) {
+					response.put(MESSAGE, "El pago con numero de recibo: " + numeroRecibo +" No existe en la empresa");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
 			
 		} catch (DataAccessException e) {
 			response.put(MESSAGE, "No se pudo realizar la consulta a la base de datos");
@@ -63,14 +97,10 @@ public class PagoRestController {
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		if(pagoDTO == null) {
-			response.put(MESSAGE, "El pago con numero de recibo: " + numeroRecibo +" No existe en el sistema");
-			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-		}
 		return new ResponseEntity<>(pagoDTO, HttpStatus.OK);
 
 	}
-	
+
 	@PostMapping("/pagos")
 	public ResponseEntity<Object> create(@Valid @RequestBody PagoDTO pagoDTO, BindingResult result) {
 		

@@ -40,8 +40,27 @@ public class ReservaServiceImpl implements IReservaService{
 	
 	@Override
 	@Transactional(readOnly = true)
+	public ReservaDTO findByIdAndEmpresaId(Long id, Long empresaId) {
+		return modelMapper.map(reservaDao.findReservaByIdAndEmpresaId(id, empresaId), ReservaDTO.class);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
 	public ReservaDTO findByCodigoReserva(String codigoReserva) {
 		return modelMapper.map(reservaDao.findByCodigoReserva(codigoReserva), ReservaDTO.class);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ReservaDTO> findAllByEmpresaId(Long empresaId) {
+		List<ReservaDTO> dtoList = new ArrayList<>();
+		Iterable<Reserva> reservas = reservaDao.findReservasByEmpresaId(empresaId);
+		
+		for(Reserva reserva : reservas) {
+			ReservaDTO reservaDTO = modelMapper.map(reserva, ReservaDTO.class);
+			dtoList.add(reservaDTO);	
+		}
+		return dtoList;
 	}
 
 	@Override
@@ -58,9 +77,16 @@ public class ReservaServiceImpl implements IReservaService{
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<ReservaDTO> findAll(Pageable page) {
+	public Page<ReservaDTO> findAllPage(Pageable page) {
 		Page<Reserva> paginaReservas = reservaDao.findAll(page);
 		return paginaReservas.map(reserva -> modelMapper.map(reserva, ReservaDTO.class));
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<ReservaDTO> findAllByEmpresaIdPage(Long empresaId, Pageable page) {
+		Page<Reserva> paginaReserva = reservaDao.findReservasByEmpresaId(empresaId, page);
+		return paginaReserva.map(reserva -> modelMapper.map(reserva, ReservaDTO.class));
 	}
 
 	@Override

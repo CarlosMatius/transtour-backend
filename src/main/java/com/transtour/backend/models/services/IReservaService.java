@@ -13,11 +13,17 @@ public interface IReservaService {
 	
 	public ReservaDTO findById(Long id);
 	
+	public ReservaDTO findByIdAndEmpresaId(Long id, Long empresaId);
+	
 	public ReservaDTO findByCodigoReserva(String codigoReserva);
+	
+	public List<ReservaDTO> findAllByEmpresaId(Long empresaId);
 	
 	public List<ReservaDTO> findAll();
 	
-	public Page<ReservaDTO> findAll(Pageable page);
+	public Page<ReservaDTO> findAllPage(Pageable page);
+	
+	public Page<ReservaDTO> findAllByEmpresaIdPage(Long empresaId, Pageable page);
 	
 	public void delete(Long id);
 }

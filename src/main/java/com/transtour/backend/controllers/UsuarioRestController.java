@@ -76,9 +76,6 @@ public class UsuarioRestController {
 	public Page<UsuarioResponse> page(@PathVariable Integer page, Authentication authentication) {
 		Pageable pageable = PageRequest.of(page, 3);
 		Page<UsuarioResponse> paginacion;
-		/* 
-		 * esto es para probar ordenamiento PageRequest.of(pageNum, pageSize, Sort.by("nombre").ascending());
-		 * */
 		
 		if (commonUtil.isSuperAdmin(authentication.getName())) {
 			paginacion = usuarioService.findAllPage(pageable);

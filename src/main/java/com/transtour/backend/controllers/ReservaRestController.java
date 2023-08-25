@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.transtour.backend.helpers.CommonUtils;
 import com.transtour.backend.models.dto.ReservaDTO;
 import com.transtour.backend.models.services.IReservaService;
 
@@ -37,10 +39,65 @@ public class ReservaRestController {
 
 	@Autowired
 	private IReservaService reservaService;
+	
+	@Autowired
+	private CommonUtils commonUtil;
 
 	@GetMapping("/reservas")
-	public List<ReservaDTO> index() {
-		return reservaService.findAll();
+	public List<ReservaDTO> index(Authentication authentication) {
+		List<ReservaDTO> reservas;
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			reservas = reservaService.findAll();
+		}
+		else {
+			reservas = reservaService.findAllByEmpresaId(commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+		}
+		return reservas;
+	}
+	
+	@GetMapping("/reservas/page/{page}")
+	public Page<ReservaDTO> page(@PathVariable Integer page, Authentication authentication) {
+		Pageable pageable = PageRequest.of(page, 3);
+		Page<ReservaDTO> paginacion;
+		
+		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			paginacion = reservaService.findAllPage(pageable);
+		}
+		else {
+			paginacion = reservaService.findAllByEmpresaIdPage(commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId(), pageable);
+		}
+
+		return paginacion;
+	}
+	
+	@GetMapping("/reservas/{id}")
+	public ResponseEntity<Object> showId(@PathVariable Long id, Authentication authentication) {
+		ReservaDTO reservaDTO;
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			
+			if (commonUtil.isSuperAdmin(authentication.getName())) {
+				reservaDTO = reservaService.findById(id);
+				if(reservaDTO == null) {
+					response.put(MESSAGE, "La reserva con id: " + id +" No existe en el sistema");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
+			else {
+				reservaDTO = reservaService.findByIdAndEmpresaId(id, commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+				if(reservaDTO == null) {
+					response.put(MESSAGE, "La reserva con id: " + id +" No existe en la empresa");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
+			
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo realizar la consulta a la base de datos");
+			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+		return new ResponseEntity<>(reservaDTO, HttpStatus.OK); 
 	}
 	
 	@GetMapping("/reservas/{codigoReserva}")
@@ -65,14 +122,8 @@ public class ReservaRestController {
 		return new ResponseEntity<>(reservaDTO, HttpStatus.OK); 
 	}
 	
-	@GetMapping("/reservas/page/{page}")
-	public Page<ReservaDTO> page(@PathVariable Integer page) {
-		Pageable pageable = PageRequest.of(page, 3);
-		return reservaService.findAll(pageable);
-	}
-	
 	@PostMapping("/reservas")
-public ResponseEntity<Object> create(@Valid @RequestBody ReservaDTO reservaDTO, BindingResult result) {
+	public ResponseEntity<Object> create(@Valid @RequestBody ReservaDTO reservaDTO, BindingResult result) {
 		
 		ReservaDTO reservaNew;
 		Map<String, Object> response = new HashMap<>();
@@ -104,20 +155,41 @@ public ResponseEntity<Object> create(@Valid @RequestBody ReservaDTO reservaDTO, 
 	}
 	
 	@DeleteMapping("/reservas/{id}")
-public ResponseEntity<Object> delete(@PathVariable Long id) {
-		
+	public ResponseEntity<Object> delete(@PathVariable Long id, Authentication authentication) {
+		ReservaDTO reservaDTO;
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			reservaService.delete(id);
+			if (commonUtil.isSuperAdmin(authentication.getName())) {
+				reservaDTO = reservaService.findById(id);
+				if(reservaDTO != null) {
+					reservaService.delete(reservaDTO.getId());
+					response.put(MESSAGE, "La reserva ha sido eliminada exitosamente!");
+				}
+				else {
+					response.put(MESSAGE, "La reserva con id: " + id +" No existe en el sistema");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
+			else {
+				reservaDTO = reservaService.findByIdAndEmpresaId(id, commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
+				if(reservaDTO != null) {
+					reservaService.delete(reservaDTO.getId());
+					response.put(MESSAGE, "La reserva ha sido eliminada exitosamente!");
+				}
+				else {
+					response.put(MESSAGE, "La reserva con id: " + id +" No existe en el sistema");
+					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+				}
+			}
+			
 		} catch (DataAccessException e) {
 			response.put(MESSAGE, "No se pudo eliminar la reserva en la base de datos");
 			response.put(ERROR, e.getMessage() +": "+ e.getMostSpecificCause().getMessage());
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		response.put(MESSAGE, "La reserva ha sido eliminada exitosamente!");
-		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
+
