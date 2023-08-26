@@ -22,7 +22,7 @@ public interface IPagoDao extends JpaRepository<Pago, Long>{
 			   "INNER JOIN r.itinerario i " +
 			   "INNER JOIN i.embarcacion e " +
 			   "INNER JOIN e.empresa emp " +
-	           "WHERE p.numeroRecibo = ?1 AND em.id = ?2")
+	           "WHERE p.numeroRecibo = ?1 AND emp.id = ?2")
 	Optional<Pago> findByNumeroReciboAndEmpresaId(String numeroRecibo, Long empresaId);
 	
 	@Transactional(readOnly = true)
@@ -31,7 +31,7 @@ public interface IPagoDao extends JpaRepository<Pago, Long>{
 			   "INNER JOIN r.itinerario i " +
 			   "INNER JOIN i.embarcacion e " +
 			   "INNER JOIN e.empresa emp " +
-	           "WHERE em.id = ?1")
+	           "WHERE emp.id = ?1")
 	List<Pago> findPagosByEmpresaId (Long empresaId);
 	
 	@Transactional(readOnly = true)
@@ -40,6 +40,6 @@ public interface IPagoDao extends JpaRepository<Pago, Long>{
 			   "INNER JOIN r.itinerario i " +
 			   "INNER JOIN i.embarcacion e " +
 			   "INNER JOIN e.empresa emp " +
-	           "WHERE em.id = ?1")
+	           "WHERE emp.id = ?1")
 	public Page<Pago> findPagosByEmpresaId(Long empresaId, Pageable pageable);
 }

@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.transtour.backend.helpers.CommonUtils;
 import com.transtour.backend.models.dao.IUsuarioDao;
 import com.transtour.backend.models.dto.UsuarioDTO;
 import com.transtour.backend.models.dto.UsuarioResponse;
@@ -36,6 +37,9 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService{
 	
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private CommonUtils commonUtil;
 
 	@Override
 	@Transactional
@@ -133,6 +137,10 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService{
 		else if(!usuarioDTO.isEnabled()) {
 			log.error("Error en el login: el usuario {} no esta habilitado para ingresar al sistema", username);
 			throw new UsernameNotFoundException("Error en el login: el usuario '"+username+"' no esta habilitado para ingresar al sistema");
+		}
+		else if (!commonUtil.isSuperAdmin(username) && (usuarioDTO.getEmpresa() == null || !usuarioDTO.getEmpresa().isEnabled())) {
+			log.error("Error en el login: el usuario {} no tiene una empresa válida o la empresa no está habilitada", username);
+	        throw new UsernameNotFoundException("Error en el login: el usuario '"+username+"' no tiene una empresa válida o la empresa no está habilitada");
 		}
 		
 		List<GrantedAuthority> authorities = usuarioDTO.getRoles()

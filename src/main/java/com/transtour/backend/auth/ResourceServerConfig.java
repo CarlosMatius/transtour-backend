@@ -28,7 +28,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         http
         	.authorizeRequests(authorizeRequests -> 
         		authorizeRequests
-        			.antMatchers(HttpMethod.GET, 
+        			/*.antMatchers(HttpMethod.GET, 
         					"/v1/roles",
         					"/v1/tipos-identificaciones",
         					"/v1/itinerarios/{fechaEmbarque}/{nombreDestino}",
@@ -107,9 +107,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         			.antMatchers(HttpMethod.GET,
         					"/v1/reservas",
         					"/v1/reservas/page/**"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR, ASESOR)
+        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR, ASESOR)*/
         			
-        			.antMatchers(HttpMethod.GET, "/v1/empresas", "/v1/empresas/{id}", "/v1/usuarios", "/v1/usuarios/{id}").permitAll()
+        			.antMatchers(HttpMethod.GET, "/v1/empresas", "/v1/empresas/{id}", "/v1/usuarios", "/v1/usuarios/{id}", "/v1/empresas/page/**").permitAll()
         			.antMatchers(HttpMethod.POST, "/v1/destinos").permitAll()
         			.antMatchers(HttpMethod.PUT, "/v1/empresas/{id}").permitAll()
         			.antMatchers(HttpMethod.DELETE, "/v1/empresas/{id}").permitAll()
