@@ -25,96 +25,95 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-        http
-        	.authorizeRequests(authorizeRequests -> 
-        		authorizeRequests
-        			/*.antMatchers(HttpMethod.GET, 
-        					"/v1/roles",
-        					"/v1/tipos-identificaciones",
-        					"/v1/itinerarios/{fechaEmbarque}/{nombreDestino}",
-        					"/v1/reservas/{codigoReserva}"
-        					).permitAll()
-        			
-        			.antMatchers(HttpMethod.POST,
-        					"/v1/reservas",
-        					"/v1/responsables",
-        					"/v1/pasajeros",
-        					"/v1/pagos"
-        					).permitAll()
-        			
-        			.antMatchers(HttpMethod.GET, 
-        					"/v1/empresas",
-        					"/v1/empresas/page/**",
-        					"/v1/empresas/by/{nit}",
-        					"/v1/empresas/{id}",
-        					"/v1/empresas/uploads/img/{nombreFoto:.+}"
-        					).hasRole(SUPERADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.POST, 
-        					"/tipos-identificaciones",
-        					"/v1/empresas",
-        					"/v1/empresas/upload"
-        					).hasRole(SUPERADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.PUT, 
-        					"/v1/tipos-identificaciones/{id}",
-        					"/v1/empresas/{id}"
-        					).hasRole(SUPERADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.DELETE, 
-        					"/v1/tipos-identificaciones/{id}",
-        					"/v1/empresas/{id}"
-        					).hasRole(SUPERADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.GET,
-        					"/v1/usuarios",
-        					"/v1/usuarios/{id}",
-        					"/v1/usuarios/by/{identificacion}",
-        					"/v1/usuarios/page/**",
-        					"/v1/embarcaciones",
-        					"/v1/embarcaciones/page/**",
-        					"/v1/embarcaciones/{id}",
-        					"/v1/itinerarios",
-        					"/v1/itinerarios/page/**",
-        					"/v1/itinerarios/{id}",
-        					"/v1/reservas/{id}",
-        					"/v1/pagos",
-        					"/v1/pagos/page/**",
-        					"/v1/pagos/{numeroRecibo}"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.POST, 
-        					"/v1/usuarios",
-        					"/v1/embarcaciones",
-        					"/v1/itinerarios",
-        					"/v1/pagos"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.PUT, 
-        					"/v1/usuarios/{id}",
-        					"/v1/embarcaciones/{id}",
-        					"/v1/itinerarios/{id}",
-        					"/v1/pasajeros/{id}"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.DELETE, 
-        					"/v1/usuarios/{id}",
-        					"/v1/embarcaciones/{id}",
-        					"/v1/itinerarios/{id}",
-        					"/v1/reservas/{id}"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
-        			
-        			.antMatchers(HttpMethod.GET,
-        					"/v1/reservas",
-        					"/v1/reservas/page/**"
-        					).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR, ASESOR)*/
-        			
-        			.antMatchers(HttpMethod.GET, "/v1/empresas", "/v1/empresas/{id}", "/v1/usuarios", "/v1/usuarios/{id}", "/v1/empresas/page/**").permitAll()
-        			.antMatchers(HttpMethod.POST, "/v1/destinos").permitAll()
-        			.antMatchers(HttpMethod.PUT, "/v1/empresas/{id}").permitAll()
-        			.antMatchers(HttpMethod.DELETE, "/v1/empresas/{id}").permitAll()
-        			.anyRequest().authenticated()
-			);
+        http.authorizeRequests(authorizeRequests -> {
+        	try {
+				authorizeRequests
+				.antMatchers(HttpMethod.GET, 
+						"/v1/roles",
+						"/v1/tipos-identificaciones",
+						"/v1/itinerarios/{fechaEmbarque}/{nombreDestino}",
+						"/v1/reservas/{codigoReserva}"
+						).permitAll()
+				
+				.antMatchers(HttpMethod.POST,
+						"/v1/reservas",
+						"/v1/responsables",
+						"/v1/pasajeros",
+						"/v1/pagos"
+						).permitAll()
+				
+				.antMatchers(HttpMethod.GET, 
+						"/v1/empresas/page/**",
+						"/v1/empresas/by/{nit}",
+						"/v1/empresas/{id}",
+						"/v1/empresas/uploads/img/**"
+						).hasRole(SUPERADMINISTRADOR)
+				
+				.antMatchers(HttpMethod.POST, 
+						"/v1/tipos-identificaciones",
+						"/v1/empresas",
+						"/v1/empresas/upload"
+						).hasRole(SUPERADMINISTRADOR)
+				
+				.antMatchers(HttpMethod.PUT, 
+						"/v1/tipos-identificaciones/{id}",
+						"/v1/empresas/{id}"
+						).hasRole(SUPERADMINISTRADOR)
+				
+				.antMatchers(HttpMethod.DELETE, 
+						"/v1/tipos-identificaciones/{id}",
+						"/v1/empresas/{id}"
+						).hasRole(SUPERADMINISTRADOR)
+				
+				.antMatchers(HttpMethod.GET,
+						"/v1/empresas",
+						"/v1/usuarios",
+						"/v1/usuarios/{id}",
+						"/v1/usuarios/by/{identificacion}",
+						"/v1/usuarios/page/**",
+						"/v1/embarcaciones",
+						"/v1/embarcaciones/page/**",
+						"/v1/embarcaciones/{id}",
+						"/v1/itinerarios",
+						"/v1/itinerarios/page/**",
+						"/v1/itinerarios/{id}",
+						"/v1/reservas/{id}",
+						"/v1/pagos",
+						"/v1/pagos/page/**",
+						"/v1/pagos/{numeroRecibo}"
+						).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+				
+				.antMatchers(HttpMethod.POST, 
+						"/v1/usuarios",
+						"/v1/embarcaciones",
+						"/v1/itinerarios",
+						"/v1/pagos"
+						).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+				
+				.antMatchers(HttpMethod.PUT, 
+						"/v1/usuarios/{id}",
+						"/v1/embarcaciones/{id}",
+						"/v1/itinerarios/{id}",
+						"/v1/pasajeros/{id}"
+						).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+				
+				.antMatchers(HttpMethod.DELETE, 
+						"/v1/usuarios/{id}",
+						"/v1/embarcaciones/{id}",
+						"/v1/itinerarios/{id}",
+						"/v1/reservas/{id}"
+						).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR)
+				
+				.antMatchers(HttpMethod.GET,
+						"/v1/reservas",
+						"/v1/reservas/page/**"
+						).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR, ASESOR)
+				.anyRequest().authenticated()
+				.and().cors(cors -> cors.configurationSource(corsConfigurationSource()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        });
 	}
 	
 	@Bean

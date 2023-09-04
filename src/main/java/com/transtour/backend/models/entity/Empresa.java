@@ -41,6 +41,7 @@ public class Empresa implements Serializable{
 	@Column(unique = true, nullable = false, length = 15)
 	private String telefono;
 	
+	@Column(nullable = true)
 	private String imagen;
 	
 	private boolean enabled;

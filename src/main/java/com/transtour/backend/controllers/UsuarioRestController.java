@@ -14,9 +14,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,6 +62,9 @@ public class UsuarioRestController {
 	@Autowired
 	private CommonUtils commonUtil;
 	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	@GetMapping("/usuarios")
 	public List<UsuarioResponse> index(Authentication authentication) {
 		List<UsuarioResponse> usuarios;
@@ -74,13 +79,15 @@ public class UsuarioRestController {
 	
 	@GetMapping("/usuarios/page/{page}")
 	public Page<UsuarioResponse> page(@PathVariable Integer page, Authentication authentication) {
-		Pageable pageable = PageRequest.of(page, 3);
+		Pageable pageable;
 		Page<UsuarioResponse> paginacion;
 		
 		if (commonUtil.isSuperAdmin(authentication.getName())) {
+			pageable = PageRequest.of(page, 5, Sort.by("empresa").and( Sort.by("nombre")));
 			paginacion = usuarioService.findAllPage(pageable);
 		}
 		else {
+			pageable = PageRequest.of(page, 5, Sort.by("nombre"));
 			paginacion = usuarioService.findAllByEmpresaPage(modelMapper.map(commonUtil.infoUsuario(authentication.getName()).getEmpresa(), Empresa.class), pageable);
 		}
 		return paginacion;
@@ -153,6 +160,9 @@ public class UsuarioRestController {
 		UsuarioDTO usuarioNew;
 		RolDTO rolDTO;
 		List<RolDTO> roles = new ArrayList<>();
+		String password = usuarioDTO.getPassword();
+		String passwordBCrypt = passwordEncoder.encode(password);
+		
 
 		if(result.hasErrors()) {
 			List<String> errors = result.getFieldErrors()
@@ -177,6 +187,7 @@ public class UsuarioRestController {
 				usuarioDTO.setEmpresa(commonUtil.infoUsuario(authentication.getName()).getEmpresa());
 			}
 			
+			usuarioDTO.setPassword(passwordBCrypt);
 			usuarioDTO.setRoles(roles);
 			usuarioNew = usuarioService.save(usuarioDTO);
 			

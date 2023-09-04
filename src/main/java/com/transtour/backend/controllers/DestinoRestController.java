@@ -51,6 +51,27 @@ public class DestinoRestController {
 		return destinoService.findAll(pageable);
 	}
 	
+	@GetMapping("/destinos/{id}")
+	public ResponseEntity<Object> showId(@PathVariable Long id) {
+		DestinoDTO destinoDTO;
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+
+			destinoDTO = destinoService.findById(id);
+			if (destinoDTO == null) {
+				response.put(MESSAGE, "El destino con id: " + id + " No existe en el sistema");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			}
+
+		} catch (DataAccessException e) {
+			response.put(MESSAGE, "No se pudo realizar la consulta a la base de datos");
+			response.put(ERROR, e.getMessage() + ": " + e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(destinoDTO, HttpStatus.OK);
+	}
+	
 	@PostMapping("/destinos")
 	public ResponseEntity<Object> create(@Valid @RequestBody DestinoDTO destinoDTO, BindingResult result) {
 		
