@@ -29,10 +29,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
         	try {
 				authorizeRequests
 				.antMatchers(HttpMethod.GET, 
+						"/v1/destinos",
 						"/v1/roles",
 						"/v1/tipos-identificaciones",
 						"/v1/itinerarios/{fechaEmbarque}/{nombreDestino}",
-						"/v1/reservas/{codigoReserva}"
+						"/v1/reservas/{codigoReserva}",
+						"/v1/itinerarios/{id}"
 						).permitAll()
 				
 				.antMatchers(HttpMethod.POST,
@@ -76,7 +78,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 						"/v1/embarcaciones/{id}",
 						"/v1/itinerarios",
 						"/v1/itinerarios/page/**",
-						"/v1/itinerarios/{id}",
 						"/v1/reservas/{id}",
 						"/v1/pagos",
 						"/v1/pagos/page/**",
@@ -108,7 +109,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 						"/v1/reservas",
 						"/v1/reservas/page/**"
 						).hasAnyRole(SUPERADMINISTRADOR, ADMINISTRADOR, ASESOR)
-				.anyRequest().authenticated()
 				.and().cors(cors -> cors.configurationSource(corsConfigurationSource()));
 			} catch (Exception e) {
 				e.printStackTrace();

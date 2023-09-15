@@ -7,6 +7,4 @@ public interface IPasajeroService {
 	public PasajeroDTO save(PasajeroDTO pasajeroDTO);
 	
 	public PasajeroDTO findById(Long id);
-	
-	public PasajeroDTO findByIdAndReservaId(Long id, Long reservaId);
 }

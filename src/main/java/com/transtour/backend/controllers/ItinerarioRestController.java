@@ -85,19 +85,10 @@ public class ItinerarioRestController {
 		
 		try {
 			
-			if (commonUtil.isSuperAdmin(authentication.getName())) {
-				itinerarioDTO = itinerarioService.findById(id);
-				if(itinerarioDTO == null) {
-					response.put(MESSAGE, "El itinerario con id: " + id +" No existe en el sistema");
-					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-				}
-			}
-			else {
-				itinerarioDTO = itinerarioService.findByIdAndEmpresaId(id, commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
-				if(itinerarioDTO == null) {
-					response.put(MESSAGE, "El itinerarion con id: " + id +" No existe en la empresa");
-					return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-				}
+			itinerarioDTO = itinerarioService.findById(id);
+			if(itinerarioDTO == null) {
+				response.put(MESSAGE, "El itinerario con id: " + id +" No existe en el sistema");
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 			}
 			
 		} catch (DataAccessException e) {
@@ -125,7 +116,7 @@ public class ItinerarioRestController {
 		}
 		
 		if(itinerariosDTO.isEmpty()) {
-			response.put(MESSAGE, "No hay itinerarios disponibles con esos datos");
+			response.put(MESSAGE, "No hay cupos disponibles");
 			return new ResponseEntity<> (response, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(itinerariosDTO, HttpStatus.OK);

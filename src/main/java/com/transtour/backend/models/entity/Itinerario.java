@@ -73,8 +73,5 @@ public class Itinerario implements Serializable{
 	}
 	
 	private static final long serialVersionUID = 1L;
-	
-	public void setCupos() {
-		this.cupos = embarcacion.getCapacidad();
-	}	
+		
 }

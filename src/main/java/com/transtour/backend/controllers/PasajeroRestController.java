@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.transtour.backend.helpers.CommonUtils;
 import com.transtour.backend.models.dto.PasajeroDTO;
 import com.transtour.backend.models.services.IPasajeroService;
 
@@ -36,8 +35,6 @@ public class PasajeroRestController {
 	@Autowired
 	private IPasajeroService pasajeroService;
 	
-	@Autowired
-	private CommonUtils commonUtil;
 
 	@PostMapping("/pasajeros")
 	public ResponseEntity<Object> create(@Valid @RequestBody PasajeroDTO pasajeroDTO, BindingResult result) {
@@ -88,19 +85,10 @@ public class PasajeroRestController {
 			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		}
 		
-		if (commonUtil.isSuperAdmin(authentication.getName())) {
-			pasajeroActual = pasajeroService.findById(id);
-			if(pasajeroActual == null) {
-				response.put(MESSAGE, "El pasajero con id: " + id +" No existe en la reserva");
-				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-			}
-		}
-		else {
-			pasajeroActual = pasajeroService.findByIdAndReservaId(id, commonUtil.infoUsuario(authentication.getName()).getEmpresa().getId());
-			if(pasajeroActual == null) {
-				response.put(MESSAGE, "El pasajero con id: " + id +" No existe en la reserva");
-				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-			}
+		pasajeroActual = pasajeroService.findById(id);
+		if(pasajeroActual == null) {
+			response.put(MESSAGE, "El pasajero con id: " + id +" No existe en la reserva");
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
 		
 		try {

@@ -6,8 +6,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,9 +29,6 @@ public class ResponsableReservaDTO implements Serializable{
 	@NotEmpty(message = "no puede ser vacio")
 	@Size(min = 7, message = "el codigo debe ser mayor a 7 caracteres")
 	private String telefono;
-	
-	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
-	private ReservaDTO reserva;
 	
 	private static final long serialVersionUID = 1L;
 }

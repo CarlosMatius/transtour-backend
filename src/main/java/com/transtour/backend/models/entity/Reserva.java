@@ -47,14 +47,16 @@ public class Reserva implements Serializable{
 	@JoinColumn(name = "itinerario", nullable = false)
 	private Itinerario itinerario;
 	
-	@OneToOne(mappedBy = "reserva")
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "reserva", nullable = true)
 	private ResponsableReserva responsableReserva;
 	
 	@OneToOne(mappedBy = "reserva")
 	private Pago pago;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Pasajero> pasajeros;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "reserva")
+    private List<Pasajero> pasajeros;
 	
 	/*
 	 * Constructors

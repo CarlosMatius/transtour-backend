@@ -42,4 +42,5 @@ public class ReservaDTO implements Serializable{
 	private List<PasajeroDTO> pasajeros;
 	
 	private static final long serialVersionUID = 1L;
+	
 }

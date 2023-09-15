@@ -100,7 +100,7 @@ public class ReservaRestController {
 		return new ResponseEntity<>(reservaDTO, HttpStatus.OK); 
 	}
 	
-	@GetMapping("/reservas/{codigoReserva}")
+	@GetMapping("/reservas/by/{codigoReserva}")
 	public ResponseEntity<Object> show(@PathVariable String codigoReserva) {
 		ReservaDTO reservaDTO;
 		Map<String, Object> response = new HashMap<>();
@@ -139,7 +139,7 @@ public class ReservaRestController {
 		}
 		
 		try {
-			
+			reservaDTO.setTotal(reservaDTO.getItinerario().getPrecio());
 			reservaNew = reservaService.save(reservaDTO);
 			
 		} catch (DataAccessException e) {

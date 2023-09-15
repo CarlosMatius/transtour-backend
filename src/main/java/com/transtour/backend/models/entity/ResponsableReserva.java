@@ -2,15 +2,11 @@ package com.transtour.backend.models.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.transtour.backend.models.builder.ResponsableReservaBuilder;
@@ -40,9 +36,6 @@ public class ResponsableReserva implements Serializable{
 	@Column(nullable = false, length = 15)
 	private String telefono;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "reserva", nullable = false)
-	private Reserva reserva;
 	
 	public ResponsableReserva(ResponsableReservaBuilder builder) {
 		this.id = builder.getId();
@@ -50,7 +43,6 @@ public class ResponsableReserva implements Serializable{
 		this.apellido = builder.getApellido();
 		this.email = builder.getEmail();
 		this.telefono = builder.getTelefono();
-		this.reserva = builder.getReserva();
 	}
 	
 	private static final long serialVersionUID = 1L;

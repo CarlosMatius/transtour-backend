@@ -1,7 +1,6 @@
 package com.transtour.backend.models.builder;
 
 import com.transtour.backend.models.entity.Pasajero;
-import com.transtour.backend.models.entity.Reserva;
 import com.transtour.backend.models.entity.TipoIdentificacion;
 
 import lombok.Getter;
@@ -14,7 +13,6 @@ public class PasajeroBuilder {
 	private String apellido;
 	private TipoIdentificacion tipoIdentificacion;
 	private String identificacion;
-	private Reserva reserva;
 	
 	public PasajeroBuilder id(Long id) {
 		this.id = id;
@@ -38,11 +36,6 @@ public class PasajeroBuilder {
 	
 	public PasajeroBuilder identificacion(String identificacion) {
 		this.identificacion = identificacion;
-		return this;
-	}
-	
-	public PasajeroBuilder reserva(Reserva reserva) {
-		this.reserva = reserva;
 		return this;
 	}
 	

@@ -40,17 +40,12 @@ public class Pasajero implements Serializable{
 	@Column(nullable = false, length = 15)
 	private String identificacion;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "reserva", nullable = false)
-	private Reserva reserva;
-	
 	public Pasajero(PasajeroBuilder builder) {
 		this.id = builder.getId();
 		this.nombre = builder.getNombre();
 		this.apellido = builder.getApellido();
 		this.tipoIdentificacion = builder.getTipoIdentificacion();
 		this.identificacion = builder.getIdentificacion();
-		this.reserva = builder.getReserva();
 	}
 	
 	private static final long serialVersionUID = 1L;
